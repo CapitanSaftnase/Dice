@@ -1,5 +1,5 @@
 {
-    "name": "Dice",
+    "name": "python",
     "description": "",
     "dependencies": {
         "core": "*",
@@ -9,17 +9,20 @@
     "files": [
         "main.ts",
         "README.md",
-        "main.py"
+        "main.py",
+        "newtest.py",
+        "newtest.ts"
     ],
     "testFiles": [
         "test.ts"
     ],
     "targetVersions": {
-        "target": "6.0.25",
+        "target": "7.0.4",
         "targetId": "microbit"
     },
     "supportedTargets": [
         "microbit"
     ],
-    "preferredEditor": "pyprj"
+    "preferredEditor": "pyprj",
+    "languageRestriction": "python-only"
 }

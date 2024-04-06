@@ -1,1 +1,1 @@
-// Hier kann man Tests durchführen; diese Datei wird nicht kompiliert, wenn dieses Paket als Erweiterung verwendet wird.
+// tests go here; this will not be compiled when this package is used as an extension.
