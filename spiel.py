@@ -1,9 +1,7 @@
 # Add your code here
 class Spiel:
     numberOfCards = 0
-    gamestate = 0
-    cards = []
-    drawnCards = []
+    
 
 
 
@@ -13,4 +11,4 @@ def selectMode():
 
 def show():
     instance = Spiel()
-    basic.show_number(5)
+    basic.show_number(10)
