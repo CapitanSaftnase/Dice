@@ -81,6 +81,17 @@ class Spiel {
         this.___modeIndex = value
     }
     
+    static cards: any[]
+    private ___cards_is_set: boolean
+    private ___cards: any[]
+    get cards(): any[] {
+        return this.___cards_is_set ? this.___cards : Spiel.cards
+    }
+    set cards(value: any[]) {
+        this.___cards_is_set = true
+        this.___cards = value
+    }
+    
     static numberOfCards: number
     private ___numberOfCards_is_set: boolean
     private ___numberOfCards: number
@@ -90,6 +101,17 @@ class Spiel {
     set numberOfCards(value: number) {
         this.___numberOfCards_is_set = true
         this.___numberOfCards = value
+    }
+    
+    static drawnCards: any[]
+    private ___drawnCards_is_set: boolean
+    private ___drawnCards: any[]
+    get drawnCards(): any[] {
+        return this.___drawnCards_is_set ? this.___drawnCards : Spiel.drawnCards
+    }
+    set drawnCards(value: any[]) {
+        this.___drawnCards_is_set = true
+        this.___drawnCards = value
     }
     
     static mode: number
@@ -112,28 +134,6 @@ class Spiel {
     set gamestate(value: number) {
         this.___gamestate_is_set = true
         this.___gamestate = value
-    }
-    
-    static cards: any[]
-    private ___cards_is_set: boolean
-    private ___cards: any[]
-    get cards(): any[] {
-        return this.___cards_is_set ? this.___cards : Spiel.cards
-    }
-    set cards(value: any[]) {
-        this.___cards_is_set = true
-        this.___cards = value
-    }
-    
-    static drawnCards: any[]
-    private ___drawnCards_is_set: boolean
-    private ___drawnCards: any[]
-    get drawnCards(): any[] {
-        return this.___drawnCards_is_set ? this.___drawnCards : Spiel.drawnCards
-    }
-    set drawnCards(value: any[]) {
-        this.___drawnCards_is_set = true
-        this.___drawnCards = value
     }
     
     public static __initSpiel() {
@@ -165,10 +165,16 @@ class Spiel {
         
     }
     
-    // TODO
-    public static initializeCards() {
-        //  return list
-        
+    // create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
+    //  e.g 20 -> 1,2...20
+    //  list() doesn't work
+    public initializeCards(numberOfCards: number): any[] {
+        let cardlist = []
+        for (let i = 1; i < numberOfCards + 1; i++) {
+            cardlist.push(i)
+        }
+        this.cards = cardlist
+        return cardlist
     }
     
     public static selectNumberOfCards() {
@@ -183,7 +189,8 @@ class Spiel {
         Spiel.modeIndex -= 1
     }
     
-    public static celebration() {
+    public celebration() {
+        basic.showNumber(this.drawnCards.length)
         
     }
     
@@ -211,4 +218,7 @@ let spiel = new Spiel()
 spiel.gamestate = 2
 let l = [1, 2, 3, 4, 5]
 console.log(l.length)
+spiel.numberOfCards = 20
+spiel.initializeCards(spiel.numberOfCards)
+console.log(spiel.cards)
 spiel.selectMode()

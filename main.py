@@ -1,4 +1,4 @@
-
+ 
 
 def on_button_pressed_a():
     if spiel.gamestate==2:
@@ -45,11 +45,16 @@ class Spiel:
     def confirmMode():
         pass
 
-    #TODO
-    def initializeCards():
+    #create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
+    # e.g 20 -> 1,2...20
+    # list() doesn't work
+    def initializeCards(self, numberOfCards):
+        cardlist = []
+        for i in range(1, numberOfCards + 1):
+            cardlist.push(i)
+        self.cards = cardlist
+        return cardlist
         
-        # return list
-        pass
 
     
     def selectNumberOfCards():
@@ -61,7 +66,8 @@ class Spiel:
     def decrementNumberOfCards():
         Spiel.modeIndex -= 1
 
-    def celebration():
+    def celebration(self):
+        basic.show_number(len(self.drawnCards))
         pass
 
     def userInducedExit():
@@ -80,4 +86,7 @@ spiel = Spiel()
 spiel.gamestate = 2
 l =[1,2,3,4,5]
 print(len(l))
+spiel.numberOfCards = 20
+spiel.initializeCards(spiel.numberOfCards)
+print(spiel.cards)
 spiel.selectMode()
