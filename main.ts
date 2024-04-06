@@ -1,8 +1,51 @@
 input.onButtonPressed(Button.A, function on_button_pressed_a() {
-    let test = new Newtest()
-    test.x = test.run_func()
-    console.log(test.x)
+    mainInput(Button.A)
 })
+function mainInput(btn: number) {
+    if (spiel.gamestate == 1) {
+        spiel.selectMode(btn)
+    }
+    
+}
+
+input.onButtonPressed(Button.B, function on_button_pressed_b() {
+    mainInput(Button.B)
+})
+input.onButtonPressed(Button.AB, function on_button_pressed_ab() {
+    let spiel = new Spiel()
+})
+class Modus {
+    static BASIC: number
+    private ___BASIC_is_set: boolean
+    private ___BASIC: number
+    get BASIC(): number {
+        return this.___BASIC_is_set ? this.___BASIC : Modus.BASIC
+    }
+    set BASIC(value: number) {
+        this.___BASIC_is_set = true
+        this.___BASIC = value
+    }
+    
+    static TIMED: number
+    private ___TIMED_is_set: boolean
+    private ___TIMED: number
+    get TIMED(): number {
+        return this.___TIMED_is_set ? this.___TIMED : Modus.TIMED
+    }
+    set TIMED(value: number) {
+        this.___TIMED_is_set = true
+        this.___TIMED = value
+    }
+    
+    public static __initModus() {
+        Modus.BASIC = 1
+        Modus.TIMED = 2
+    }
+    
+}
+
+Modus.__initModus()
+
 class Gamestate {
     static PLAYER_SEL: number
     private ___PLAYER_SEL_is_set: boolean
@@ -103,8 +146,8 @@ class Spiel {
     }
     
     public static __initSpiel() {
-        Spiel.mode = 0
-        Spiel.modeIndex = 0
+        Spiel.mode = Modus.BASIC
+        Spiel.modeIndex = 1
         Spiel.numberOfCards = 0
         Spiel.gamestate = Gamestate.PLAYER_SEL
         Spiel.cards = []
@@ -115,51 +158,67 @@ class Spiel {
         
     }
     
-    public static selectMode() {
+    public selectMode(btn: number) {
+        if (Button.A) {
+            this.incrementMode()
+        } else if (Button.B) {
+            this.decrementMode()
+        }
+        
+        console.log(this.modeIndex)
+    }
+    
+    public incrementMode() {
+        if (this.modeIndex < 2) {
+            this.modeIndex += 1
+        } else {
+            this.modeIndex = 1
+        }
         
     }
     
-    public static incrementMode() {
-        Spiel.modeIndex += 1
-    }
-    
-    public static decrementMode() {
-        Spiel.modeIndex -= 1
-    }
-    
-    public static confirmMode() {
+    public decrementMode() {
+        if (this.modeIndex > 1) {
+            this.modeIndex -= 1
+        } else {
+            this.modeIndex = 2
+        }
         
     }
     
-    public static selectNumberOfCards() {
+    public confirmMode() {
+        
+    }
+    
+    public selectNumberOfCards() {
         Spiel.numberOfCards = Spiel.modeIndex
     }
     
-    public static incrementNumberOfCards() {
+    public incrementNumberOfCards() {
         Spiel.modeIndex += 1
     }
     
-    public static decrementNumberOfCards() {
+    public decrementNumberOfCards() {
         Spiel.modeIndex -= 1
     }
     
-    public static celebration() {
+    public celebration() {
         
     }
     
-    public static userInducedExit() {
+    public userInducedExit() {
         
     }
     
-    public static drawCard() {
+    public drawCard() {
         
     }
     
-    public static outputCard() {
+    public outputCard() {
         
     }
     
-    public static exitGame() {
+    public exitGame() {
         
     }
     
@@ -167,27 +226,4 @@ class Spiel {
 
 Spiel.__initSpiel()
 
-class Newtest {
-    static x: string
-    private ___x_is_set: boolean
-    private ___x: string
-    get x(): string {
-        return this.___x_is_set ? this.___x : Newtest.x
-    }
-    set x(value: string) {
-        this.___x_is_set = true
-        this.___x = value
-    }
-    
-    public static __initNewtest() {
-        Newtest.x = null
-    }
-    
-    public run_func(): string {
-        return "string"
-    }
-    
-}
-
-Newtest.__initNewtest()
-
+let spiel = new Spiel()
