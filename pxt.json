@@ -7,14 +7,9 @@
         "microphone": "*"
     },
     "files": [
-        "main.blocks",
         "main.ts",
         "README.md",
-        "main.py",
-        "spiel.py",
-        "spiel.ts",
-        "timer.py",
-        "timer.ts"
+        "main.py"
     ],
     "testFiles": [
         "test.ts"
