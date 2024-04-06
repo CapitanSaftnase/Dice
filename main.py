@@ -5,7 +5,6 @@ input.on_button_pressed(Button.A, on_button_pressed_a)
 
 def on_button_pressed_b():
     mainInput(Button.B)
-    
 
 def mainInput(btn):
     if spiel.gamestate == 1:
@@ -14,7 +13,7 @@ def mainInput(btn):
 input.on_button_pressed(Button.B, on_button_pressed_b)
 
 def on_button_pressed_ab():
-    spiel = Spiel()
+    pass
 
 input.on_button_pressed(Button.AB, on_button_pressed_ab)
 
@@ -42,7 +41,6 @@ class Spiel:
             self.incrementMode()
         elif Button.B:
             self.decrementMode()
-        
 
         print(self.modeIndex)
 

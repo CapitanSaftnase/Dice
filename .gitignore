@@ -12,3 +12,5 @@ _site
 .simstate.json
 _config.yml
 .vscode/
+*.ts
+*.blocks

@@ -7,15 +7,11 @@
         "microphone": "*"
     },
     "files": [
-        "main.ts",
         "README.md",
         "main.py",
-        "newtest.py",
-        "newtest.ts"
+        "main.ts"
     ],
-    "testFiles": [
-        "test.ts"
-    ],
+    "testFiles": [],
     "targetVersions": {
         "target": "7.0.4",
         "targetId": "microbit"
@@ -24,5 +20,5 @@
         "microbit"
     ],
     "preferredEditor": "pyprj",
-    "languageRestriction": "Dice-only"
+    "languageRestriction": "python-only"
 }

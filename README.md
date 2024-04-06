@@ -1,24 +1,24 @@
 
-> Open this page at [https://install-java.github.io/Dice/](https://install-java.github.io/Dice/)
+> Diese Seite bei [https://capitansaftnase.github.io/dice/](https://capitansaftnase.github.io/dice/) öffnen
 
-## Use as Extension
+## Als Erweiterung verwenden
 
-This repository can be added as an **extension** in MakeCode.
+Dieses Repository kann als **Erweiterung** in MakeCode hinzugefügt werden.
 
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **New Project**
-* click on **Extensions** under the gearwheel menu
-* search for **https://github.com/install-java/Dice** and import
+* öffne [https://makecode.microbit.org/beta/](https://makecode.microbit.org/beta/)
+* klicke auf **Neues Projekt**
+* klicke auf **Erweiterungen** unter dem Zahnrad-Menü
+* nach **https://github.com/capitansaftnase/dice** suchen und importieren
 
-## Edit this project
+## Dieses Projekt bearbeiten
 
-To edit this repository in MakeCode.
+Um dieses Repository in MakeCode zu bearbeiten.
 
-* open [https://makecode.microbit.org/](https://makecode.microbit.org/)
-* click on **Import** then click on **Import URL**
-* paste **https://github.com/install-java/Dice** and click import
+* öffne [https://makecode.microbit.org/beta/](https://makecode.microbit.org/beta/)
+* klicke auf **Importieren** und dann auf **Importiere URL**
+* füge **https://github.com/capitansaftnase/dice** ein und klicke auf Importieren
 
-#### Metadata (used for search, rendering)
+#### Metadaten (verwendet für Suche, Rendering)
 
 * for PXT/microbit
 <script src="https://makecode.com/gh-pages-embed.js"></script><script>makeCodeRender("{{ site.makecode.home_url }}", "{{ site.github.owner_name }}/{{ site.github.repository_name }}");</script>
