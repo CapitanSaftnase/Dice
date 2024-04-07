@@ -42,16 +42,17 @@ def input_event(btn):
     elif spiel.gamestate == Gamestate.GAME_OVER:
         pass
 
-class Zufallsgenerator(cards):
+class Zufallsgenerator():
+    cards = 0
     def init(self,cards):
         self.cards = cards
 
-
-    def generateRandomNumber(self):
-        import random
-        random_index = random.randint(0, len(self.cards) -1 )
+    def generateRandomNumber(self, cards):
+        import Math.random
+        random_index = randint(0, cards -1 )
 
         return random_index
+
 
 class Timer:
     duration = 0
@@ -210,15 +211,17 @@ class Spiel:
             self.celebration()
         pass
 
-    # depending on what type of symbol(int,string,char) card is, output different sounds 
-   def outputCard(self, card):
-       if isinstance(card, int):
-           basic.show_number(card)
-       elif isinstance(card, str):
-           if len(card) == 1:
-               basic.show_string(card)
-           else:
-               basic.show_string(card)
+# depending on what type of symbol(int,string,char) card is, output different sounds
+    def outputCard(self, card):
+        
+        if card is int:
+            basic.show_number(card)
+        elif card is string:
+            if len(card) == 1:
+                basic.show_string(card)
+            else:
+                basic.show_string(card)
+        pass
 
     #TODO reset game to beginning showing mode selection first 
     def exitGame(self):
