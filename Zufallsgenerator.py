@@ -71,18 +71,6 @@ class Gamestate(Enum):
     def items(self, i):
         return ["MODE", "CARD", "GAME"][i]
 
-
-class Zufallsgenerator(cards):
-    def __init__(self,cards):
-        self.cards = cards
-
-    def generateRandomNumber(self):
-        import random
-        random_index = random.randint(0, len(self.cards) -1 )
-
-        return random_index
-        
-
 class Spiel:
     mode = Modus.BASIC
     modeIndex = 0

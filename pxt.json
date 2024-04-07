@@ -10,7 +10,9 @@
         "main.blocks",
         "main.ts",
         "README.md",
-        "main.py"
+        "main.py",
+        "Zufallsgenerator.py",
+        "Zufallsgenerator.ts"
     ],
     "testFiles": [
         "test.ts"
