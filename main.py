@@ -34,9 +34,13 @@ def input_event(btn):
             spiel.confirmNumberOfCards()
     elif spiel.gamestate == Gamestate.GAME_START:
         if btn == Button.A:
-            spiel.drawCard(ButtonAction.LEFT)
+            spiel.drawCard()
         elif btn == Button.B:
-            spiel.drawCard(ButtonAction.RIGHT)
+            spiel.drawCard()
+        elif btn == Button.AB:
+            spiel.userInducedExit()
+    elif spiel.gamestate == Gamestate.GAME_OVER:
+        pass
 
 class Zufallsgenerator(cards):
     def init(self,cards):
@@ -91,8 +95,17 @@ class Spiel:
     cards = []
     drawnCards = []
 
-    def __init__(self):
-        pass
+    def __init__(self, mode, modeIndex, numberOfCards, gamestate, cards, drawnCards):
+        self.initGame(mode, modeIndex, numberOfCards, gamestate, cards, drawnCards)
+
+    def initGame(self, mode, modeIndex, numberOfCards, gamestate, cards, drawnCards):
+        self.mode = mode
+        self.modeIndex = modeIndex
+        self.numberOfCards = numberOfCards
+        self.gamestate = gamestate
+        self.cards = cards
+        self.drawnCards = drawnCards
+
 
     def selectMode(self, btn):
         if btn == ButtonAction.RIGHT:
@@ -156,14 +169,14 @@ class Spiel:
 # outputs sound/image and how many cards were done
     # depending on how many show different images e.g hear/smiley/sad smiley
     def celebration(self):
-        doneCards = len(self.drawnCards) #
+        doneCards = len(self.drawnCards)
         # 100% done
         if doneCards == self.numberOfCards:
             #TODO special action sounds (melody or so)
             basic.show_icon(IconNames.FABULOUS)
             pass
         # 50%    
-        elif doneCards == self.numberOfCards / 2:
+        elif doneCards >= self.numberOfCards / 2:
             #TODO 
             basic.show_icon(IconNames.HAPPY)
             pass
@@ -171,7 +184,8 @@ class Spiel:
         else:
             basic.show_icon(IconNames.SAD)
         #game waits for 3 secs before restarting
-        control.wait_micros(3000)
+        control.wait_micros(4000)
+        basic.clear_screen()
         self.exitGame()
         pass
 
@@ -182,7 +196,7 @@ class Spiel:
         pass
 
      # at the end check if there are any cards left
-    def drawCard(self, btn):
+    def drawCard(self):
         # call random Num generator with length of cards
         indexForDrawing = 0
         # <- for now -> Zufallsgenerator.generateNumber(len(self.cards))
@@ -208,6 +222,6 @@ class Spiel:
 
     #TODO reset game to beginning showing mode selection first 
     def exitGame(self):
-        pass
+        self.initGame(Modes.BASIC, 0, 0, Gamestate.MODES_SEL, [], [])
 
-spiel = Spiel()
+spiel = Spiel(Modes.BASIC, 0, 0, Gamestate.MODES_SEL, [], [])
