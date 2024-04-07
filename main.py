@@ -14,6 +14,7 @@ def on_button_pressed_ab():
 input.on_button_pressed(Button.AB, on_button_pressed_ab)
 
 def on_gesture_shake():
+    input_event(Gesture.SHAKE)
     pass
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
@@ -33,9 +34,7 @@ def input_event(btn):
         elif btn == Button.AB:
             spiel.confirmNumberOfCards()
     elif spiel.gamestate == Gamestate.GAME_START:
-        if btn == Button.A:
-            spiel.drawCard()
-        elif btn == Button.B:
+        if btn == Gesture.SHAKE:
             spiel.drawCard()
         elif btn == Button.AB:
             spiel.userInducedExit()
@@ -75,7 +74,7 @@ class Modes(Enum):
     def length(self):
         return 2
     def items(self, i):
-        return ["BASIC", "TIMED"][i] 
+        return ["BASIC", "TIMED"][i]
 
 
 class Gamestate(Enum):
@@ -147,11 +146,12 @@ class Spiel:
             self.modeIndex -= 1
         else:
             self.modeIndex = 99
+            
     # changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
     def confirmNumberOfCards(self):
-        self.initializeCards()
-        self.numberOfCards = self.modeIndex
+        self.numberOfCards = self.modeIndex + 1
         basic.show_number(self.modeIndex+1)
+        self.initializeCards()
         self.gamestate = Gamestate.GAME_START
         basic.clear_screen()
         basic.show_icon(IconNames.HEART)
@@ -160,11 +160,14 @@ class Spiel:
     # e.g 20 -> 1,2...20
     #list() doesn't work
     def initializeCards(self):
-        i = self.modeIndex
-        while (i>0):
-            self.cards.push(""+i)
-            i-=1
-        print(self.cards)
+        cardlist = []
+        print("numberOfCards:" + self.numberOfCards)
+        for i in range(1, self.numberOfCards + 1):
+            cardlist.push("" +i)
+        
+        self.cards = cardlist
+        return cardlist
+
             
 
 # outputs sound/image and how many cards were done
@@ -174,12 +177,12 @@ class Spiel:
         # 100% done
         if doneCards == self.numberOfCards:
             #TODO special action sounds (melody or so)
-            basic.show_icon(IconNames.FABULOUS)
+            basic.show_icon(IconNames.HAPPY)
             pass
         # 50%    
         elif doneCards >= self.numberOfCards / 2:
             #TODO 
-            basic.show_icon(IconNames.HAPPY)
+            basic.show_icon(IconNames.DUCK)
             pass
         # < 50%
         else:
@@ -196,31 +199,32 @@ class Spiel:
         self.celebration()
         pass
 
-     # at the end check if there are any cards left
+# at the end check if there are any cards left
     def drawCard(self):
         # call random Num generator with length of cards
-        indexForDrawing = 0
-        # <- for now -> Zufallsgenerator.generateNumber(len(self.cards))
+        generator = Zufallsgenerator()
+        indexForDrawing = generator.generateRandomNumber(len(self.cards))
         # remove drawnCard from cards and add it to drawnCards
-        self.drawnCards.push(self.cards[indexForDrawing])
+        drawnCard = self.cards[indexForDrawing]
         self.cards.remove_at(indexForDrawing)
-        self.outputCard()
+        self.drawnCards.push(drawnCard)
+
+        self.outputCard(drawnCard)
         #no cards left
         if len(self.cards) == 0:
             self.gamestate = Gamestate.GAME_OVER
             self.celebration()
         pass
 
+
 # depending on what type of symbol(int,string,char) card is, output different sounds
-    def outputCard(self, card):
-        
-        if card is int:
-            basic.show_number(card)
-        elif card is string:
-            if len(card) == 1:
-                basic.show_string(card)
-            else:
-                basic.show_string(card)
+    def outputCard(self, card): 
+        if card == "P":
+            basic.show_string(card)
+        elif card == "S":
+            basic.show_string(card)
+        else:
+            basic.show_string(card)
         pass
 
     #TODO reset game to beginning showing mode selection first 
