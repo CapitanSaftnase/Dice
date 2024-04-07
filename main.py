@@ -140,21 +140,50 @@ class Spiel:
         self.cards = cardlist
         return cardlist
 
-    #outputs sound/image and how many cards were done
+# outputs sound/image and how many cards were done
     # depending on how many show different images e.g hear/smiley/sad smiley
     def celebration(self):
+        doneCards = len(self.drawnCards) #
+        # 100% done
+        if doneCards == self.numberOfCards:
+            #TODO special action sounds (melody or so)
+            basic.show_icon(IconNames.FABULOUS)
+            pass
+        # 50%    
+        elif doneCards == self.numberOfCards / 2:
+            #TODO 
+            basic.show_icon(IconNames.HAPPY)
+            pass
+        # < 50%
+        else:
+            basic.show_icon(IconNames.SAD)
+        #game waits for 3 secs before restarting
+        control.wait_micros(3000)
+        self.exitGame()
         pass
 
     # triggered with A+B -> change gamestate and call celebration()
     def userInducedExit(self):
+        gamestate = Gamestate.GAME_OVER
+        self.celebration()
         pass
 
-    # at the end check if there are any cards left
+     # at the end check if there are any cards left
     def drawCard(self):
-        # call random Num generator
-        #outputCard()
-        # TODO no cards left -> change gamestate
+        # call random Num generator with length of cards
+        indexForDrawing = 5 # <- for now -> Zufallsgenerator.generateNumber(len(self.cards))
+        # remove drawnCard from cards and add it to drawnCards
+        drawnCard = self.cards[indexForDrawing]
+        self.cards.remove_at(indexForDrawing)
+        self.drawnCards.push(drawnCard)
+
+        self.outputCard(drawnCard)
+        #no cards left
+        if len(self.cards) == 0:
+            self.gamestate = Gamestate.GAME_OVER
+            self.celebration()
         pass
+
     # depending on what type of symbol(int,string,char) card is, output different sounds 
     def outputCard(self, card):
         pass
