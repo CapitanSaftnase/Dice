@@ -13,6 +13,10 @@ def on_button_pressed_ab():
 
 input.on_button_pressed(Button.AB, on_button_pressed_ab)
 
+# 
+def on_gesture_shake():
+    pass
+input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
 def input_event(btn):
     if spiel.gamestate == Gamestate.MODUS_SEL:
@@ -27,6 +31,8 @@ def input_event(btn):
             spiel.selectNumberOfCards(ButtonAction.LEFT)
         elif btn == Button.B:
             spiel.selectNumberOfCards(ButtonAction.RIGHT)
+        elif btn == Button.AB:
+            spiel.confirmNumberOfCards()
 
 class Timer:
     duration = 0
@@ -55,8 +61,9 @@ class Gamestate(Enum):
     MODUS_SEL = 1
     CARD_SEL = 2
     GAME_START = 3
+    # length has to be hard-coded
     def length(self):
-        return 2
+        return 3
     def items(self, i):
         return ["MODE", "CARD", "GAME"][i]
 
@@ -109,26 +116,49 @@ class Spiel:
             self.modeIndex -= 1
         else:
             self.modeIndex = 99
-
+    # changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
     def confirmNumberOfCards(self):
         self.numberOfCards = self.modeIndex
         basic.show_number(self.modeIndex+1)
         self.gamestate = Gamestate.GAME_START
+        self.initializeCards(self.numberOfCards)
+        basic.clear_screen()
+        basic.show_icon(IconNames.HEART)
+        
+    #create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
+    # e.g 20 -> 1,2...20
+    #list() doesn't work
+    def initializeCards(self, numberOfCards):
+        cardlist = []
+        for i in range(1, numberOfCards + 1):
+            cardlist.push(i)
+        self.cards = cardlist
+        return cardlist
 
-
+    #outputs sound/image and how many cards were done
+    # depending on how many show different images e.g hear/smiley/sad smiley
     def celebration(self):
         pass
 
+    # triggered with A+B -> change gamestate and call celebration()
     def userInducedExit(self):
         pass
 
+    # at the end check if there are any cards left
     def drawCard(self):
+        # call random Num generator
+        #outputCard()
+        # TODO no cards left -> change gamestate
         pass
-
-    def outputCard(self):
+    # depending on what type of symbol(int,string,char) card is, output different sounds 
+    def outputCard(self, card):
+        
         pass
-
+    
+    #TODO reset game to beginning showing mode selection first 
     def exitGame(self):
         pass
 
 spiel = Spiel()
+
+
