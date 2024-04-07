@@ -178,7 +178,7 @@ class Modes {
     }
     
     public items(i: number): string {
-        return ["BASIC", "TIMED"][i]
+        return ["B", "T"][i]
     }
     
 }
@@ -234,15 +234,16 @@ class Gamestate {
         Gamestate.MODES_SEL = 1
         Gamestate.CARD_SEL = 2
         Gamestate.GAME_START = 3
+        Gamestate.GAME_OVER = 4
     }
     
     //  length has to be hard-coded
     public length(): number {
-        return 3
+        return 4
     }
     
     public items(i: number): string {
-        return ["MODE", "CARD", "GAME"][i]
+        return ["MODE", "CARD", "GAME", "GAMEOVER"][i]
     }
     
 }
@@ -438,7 +439,9 @@ class Spiel {
         }
         
         // game waits for 3 secs before restarting
-        control.waitMicros(4000)
+        control.waitMicros(2000000)
+        basic.showNumber(doneCards)
+        control.waitMicros(2000000)
         basic.clearScreen()
         this.exitGame()
         

@@ -74,18 +74,19 @@ class Modes(Enum):
     def length(self):
         return 2
     def items(self, i):
-        return ["BASIC", "TIMED"][i]
+        return ["B", "T"][i]
 
 
 class Gamestate(Enum):
     MODES_SEL = 1
     CARD_SEL = 2
     GAME_START = 3
+    GAME_OVER = 4
     # length has to be hard-coded
     def length(self):
-        return 3
+        return 4
     def items(self, i):
-        return ["MODE", "CARD", "GAME"][i]
+        return ["MODE", "CARD", "GAME", "GAMEOVER"][i]
 
 class Spiel:
     mode = Modes.BASIC
@@ -188,7 +189,9 @@ class Spiel:
         else:
             basic.show_icon(IconNames.SAD)
         #game waits for 3 secs before restarting
-        control.wait_micros(4000)
+        control.wait_micros(2000000)
+        basic.show_number(doneCards)
+        control.wait_micros(2000000)
         basic.clear_screen()
         self.exitGame()
         pass
