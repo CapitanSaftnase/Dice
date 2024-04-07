@@ -18,7 +18,7 @@ def on_gesture_shake():
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
 def input_event(btn):
-    if spiel.gamestate == Gamestate.MODUS_SEL:
+    if spiel.gamestate == Gamestate.MODES_SEL:
         if btn == Button.AB:
             spiel.confirmMode()
         elif btn == Button.A:
@@ -32,16 +32,23 @@ def input_event(btn):
             spiel.selectNumberOfCards(ButtonAction.RIGHT)
         elif btn == Button.AB:
             spiel.confirmNumberOfCards()
+    elif spiel.gamestate == Gamestate.GAME_START:
+        if btn == Button.A:
+            spiel.drawCard(ButtonAction.LEFT)
+        elif btn == Button.B:
+            spiel.drawCard(ButtonAction.RIGHT)
+
 class Zufallsgenerator(cards):
     def init(self,cards):
         self.cards = cards
+
 
     def generateRandomNumber(self):
         import random
         random_index = random.randint(0, len(self.cards) -1 )
 
         return random_index
-        
+
 class Timer:
     duration = 0
     def __init__(self, duration):
@@ -57,21 +64,17 @@ class ButtonAction(Enum):
     RIGHT = 2
     BOTH = 3
 
-class Modus(Enum):
+class Modes(Enum):
     BASIC = 1
     TIMED = 2
     def length(self):
         return 2
     def items(self, i):
-        return ["BASIC", "TIMED"][i]
-
-class Modes(Enum):
-    BASIC = 0
-    TIMED = 1    
+        return ["BASIC", "TIMED"][i] 
 
 
 class Gamestate(Enum):
-    MODUS_SEL = 1
+    MODES_SEL = 1
     CARD_SEL = 2
     GAME_START = 3
     # length has to be hard-coded
@@ -81,10 +84,10 @@ class Gamestate(Enum):
         return ["MODE", "CARD", "GAME"][i]
 
 class Spiel:
-    mode = Modus.BASIC
+    mode = Modes.BASIC
     modeIndex = 0
     numberOfCards = 0
-    gamestate = Gamestate.MODUS_SEL
+    gamestate = Gamestate.MODES_SEL
     cards = []
     drawnCards = []
 
@@ -96,17 +99,17 @@ class Spiel:
             self.incrementMode()
         if btn == ButtonAction.LEFT:
             self.decrementMode()
-        basic.show_string(Modus().items(self.modeIndex))
+        basic.show_string(Modes().items(self.modeIndex), 50)
 
     def incrementMode(self):
         self.modeIndex += 1
-        self.modeIndex %= len(Modus())
+        self.modeIndex %= len(Modes())
 
     def decrementMode(self):
         if self.modeIndex > 0:
             self.modeIndex -= 1
         else:
-            self.modeIndex = len(Modus()) - 1
+            self.modeIndex = len(Modes()) - 1
 
     def confirmMode(self):
         self.mode = self.modeIndex+1
@@ -132,22 +135,23 @@ class Spiel:
             self.modeIndex = 99
     # changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
     def confirmNumberOfCards(self):
+        self.initializeCards()
         self.numberOfCards = self.modeIndex
         basic.show_number(self.modeIndex+1)
         self.gamestate = Gamestate.GAME_START
-        self.initializeCards(self.numberOfCards)
         basic.clear_screen()
         basic.show_icon(IconNames.HEART)
 
     #create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
     # e.g 20 -> 1,2...20
     #list() doesn't work
-    def initializeCards(self, numberOfCards):
-        cardlist = []
-        for i in range(1, numberOfCards + 1):
-            cardlist.push(i)
-        self.cards = cardlist
-        return cardlist
+    def initializeCards(self):
+        i = self.modeIndex
+        while (i>0):
+            self.cards.push(""+i)
+            i-=1
+        print(self.cards)
+            
 
 # outputs sound/image and how many cards were done
     # depending on how many show different images e.g hear/smiley/sad smiley
@@ -178,15 +182,14 @@ class Spiel:
         pass
 
      # at the end check if there are any cards left
-    def drawCard(self):
+    def drawCard(self, btn):
         # call random Num generator with length of cards
-        indexForDrawing = 5 # <- for now -> Zufallsgenerator.generateNumber(len(self.cards))
+        indexForDrawing = 0
+        # <- for now -> Zufallsgenerator.generateNumber(len(self.cards))
         # remove drawnCard from cards and add it to drawnCards
-        drawnCard = self.cards[indexForDrawing]
+        self.drawnCards.push(self.cards[indexForDrawing])
         self.cards.remove_at(indexForDrawing)
-        self.drawnCards.push(drawnCard)
-
-        self.outputCard(drawnCard)
+        self.outputCard()
         #no cards left
         if len(self.cards) == 0:
             self.gamestate = Gamestate.GAME_OVER
@@ -195,14 +198,14 @@ class Spiel:
 
     # depending on what type of symbol(int,string,char) card is, output different sounds 
    def outputCard(self, card):
-    if isinstance(card, int):
-        basic.show_number(card)
-    elif isinstance(card, str):
-    if len(card) == 1:
-        basic.show_string(card)
-    else:
-        basic.show_string(card)
-pass
+       if isinstance(card, int):
+           basic.show_number(card)
+       elif isinstance(card, str):
+           if len(card) == 1:
+               basic.show_string(card)
+           else:
+               basic.show_string(card)
+
     #TODO reset game to beginning showing mode selection first 
     def exitGame(self):
         pass
