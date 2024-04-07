@@ -154,6 +154,10 @@ class Spiel:
         basic.show_number(self.modeIndex+1)
         self.initializeCards()
         self.gamestate = Gamestate.GAME_START
+        if self.mode == Modes.TIMED:
+            # Start timer, duration: 100s
+            timer = Timer(100000)
+            timer.startTimer()
         basic.clear_screen()
         basic.show_icon(IconNames.HEART)
 

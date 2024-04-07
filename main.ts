@@ -398,10 +398,17 @@ class Spiel {
     
     //  changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
     public confirmNumberOfCards() {
+        let timer: Timer;
         this.numberOfCards = this.modeIndex + 1
         basic.showNumber(this.modeIndex + 1)
         this.initializeCards()
         this.gamestate = Gamestate.GAME_START
+        if (this.mode == Modes.TIMED) {
+            //  Start timer, duration: 100s
+            timer = new Timer(100000)
+            timer.startTimer()
+        }
+        
         basic.clearScreen()
         basic.showIcon(IconNames.Heart)
     }
