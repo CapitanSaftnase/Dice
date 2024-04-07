@@ -13,7 +13,6 @@ def on_button_pressed_ab():
 
 input.on_button_pressed(Button.AB, on_button_pressed_ab)
 
-# 
 def on_gesture_shake():
     pass
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
@@ -57,6 +56,11 @@ class Modus(Enum):
     def items(self, i):
         return ["BASIC", "TIMED"][i]
 
+class Modes(Enum):
+    BASIC = 0
+    TIMED = 1    
+
+
 class Gamestate(Enum):
     MODUS_SEL = 1
     CARD_SEL = 2
@@ -74,6 +78,7 @@ class Spiel:
     gamestate = Gamestate.MODUS_SEL
     cards = []
     drawnCards = []
+
     def __init__(self):
         pass
 
@@ -124,7 +129,7 @@ class Spiel:
         self.initializeCards(self.numberOfCards)
         basic.clear_screen()
         basic.show_icon(IconNames.HEART)
-        
+
     #create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
     # e.g 20 -> 1,2...20
     #list() doesn't work
@@ -152,13 +157,10 @@ class Spiel:
         pass
     # depending on what type of symbol(int,string,char) card is, output different sounds 
     def outputCard(self, card):
-        
         pass
-    
+
     #TODO reset game to beginning showing mode selection first 
     def exitGame(self):
         pass
 
 spiel = Spiel()
-
-
