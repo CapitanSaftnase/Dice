@@ -95,6 +95,60 @@ class Gamestate(Enum):
         return ["MODE", "CARD", "GAME", "GAMEOVER"][i]
 
 class Mode():
+    def drawnCard(self):
+        pass
+    def getMode(self):
+        pass
+
+class Mode1(Mode):
+    # at the end check if there are any cards left
+    def drawCard(self, cards, index):
+        #self.gameMode.drawCard()
+        # call random Num generator with length of cards
+        generator = Zufallsgenerator()
+        #indexForDrawing = generator.generateRandomNumber(len(cards))
+        # remove drawnCard from cards and add it to drawnCards
+        #drawnCard = cards[indexForDrawing]
+        #cards.remove_at(indexForDrawing)
+        #drawnCards.push(drawnCard)
+
+        #outputCard(drawnCard)
+        index = 0
+        #no cards left
+        #if len(cards) == 0:
+        #    gamestate = Gamestate.GAME_OVER
+        #    celebration()
+        pass
+
+    def getMode(self):
+        return Modes.ONE
+
+class Mode2(Mode):
+    def drawCard(self):
+        pass
+    def getMode(self):
+        return Modes.TWO
+
+class Mode3(Mode):
+    def drawCard(self):
+        pass
+    def getMode(self):
+        return Modes.THREE
+
+class Mode4(Mode):
+    def drawCard(self):
+        pass
+    def getMode(self):
+        return Modes.FOUR
+
+class Mode5(Mode):
+    def drawCard(self):
+        pass
+    def getMode(self):
+        return Modes.FIVE
+
+class Spiel:
+    mode = None
     index = 0
     numberOfCards = 0
     cards = []
@@ -245,6 +299,10 @@ class Spiel:
         self.mode.index = 0
         basic.show_number(self.mode.index+1, 50)
         self.gamestate = Gamestate.CARD_SEL
+        # set Mode
+
+    def modeInstance(self):
+        return Mode1()
 
     def modeInstance(self):
         return Mode1()

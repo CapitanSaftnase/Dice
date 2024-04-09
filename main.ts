@@ -327,7 +327,7 @@ class Mode {
     get cards(): string[] {
         return this.___cards_is_set ? this.___cards : Mode.cards
     }
-    set cards(value: string[]) {
+    set cards(value: any[]) {
         this.___cards_is_set = true
         this.___cards = value
     }
@@ -642,7 +642,7 @@ class Spiel {
     // create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
     //  e.g 20 -> 1,2...20
     // list() doesn't work
-    public initializeCards(): string[] {
+    public initializeCards(): any[] {
         let cardlist = []
         console.log("numberOfCards:" + this.mode.numberOfCards)
         for (let i = 1; i < this.mode.numberOfCards + 1; i++) {
