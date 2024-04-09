@@ -32,7 +32,7 @@ function input_event(btn: number) {
         
     } else if (spiel.gamestate == Gamestate.GAME_START) {
         if (btn == Gesture.Shake) {
-            spiel.drawCard()
+            spiel.mode.drawCard(spiel.cards, spiel.index)
         } else if (btn == Button.AB) {
             spiel.userInducedExit()
         } else if (btn == Button.B) {
@@ -194,15 +194,32 @@ class Modes {
         this.___FOUR = value
     }
     
-    public static __initModes() {
-        Modes.ONE = 1
-        Modes.TWO = 2
-        Modes.THREE = 3
-        Modes.FOUR = 4
+    static FIVE: number
+    private ___FIVE_is_set: boolean
+    private ___FIVE: number
+    get FIVE(): number {
+        return this.___FIVE_is_set ? this.___FIVE : Modes.FIVE
+    }
+    set FIVE(value: number) {
+        this.___FIVE_is_set = true
+        this.___FIVE = value
     }
     
+    public static __initModes() {
+        Modes.ONE = 1
+        //  Singleplayer mode
+        Modes.TWO = 2
+        //  Timer mode
+        Modes.THREE = 3
+        //  Family mode
+        Modes.FOUR = 4
+        //  Picker mode
+        Modes.FIVE = 5
+    }
+    
+    //  Top of the deck mode
     public length(): number {
-        return 4
+        return 5
     }
     
     public items(i: number): string {
@@ -278,18 +295,88 @@ class Gamestate {
 
 Gamestate.__initGamestate()
 
-class Spiel {
-    static mode: number
-    private ___mode_is_set: boolean
-    private ___mode: number
-    get mode(): number {
-        return this.___mode_is_set ? this.___mode : Spiel.mode
-    }
-    set mode(value: number) {
-        this.___mode_is_set = true
-        this.___mode = value
+class Mode {
+    public drawnCard() {
+        
     }
     
+    public getMode() {
+        
+    }
+    
+}
+
+class Mode1 extends Mode {
+    //  at the end check if there are any cards left
+    public drawCard(cards: any, index: number) {
+        // self.gameMode.drawCard()
+        //  call random Num generator with length of cards
+        let generator = new Zufallsgenerator()
+        // indexForDrawing = generator.generateRandomNumber(len(cards))
+        //  remove drawnCard from cards and add it to drawnCards
+        // drawnCard = cards[indexForDrawing]
+        // cards.remove_at(indexForDrawing)
+        // drawnCards.push(drawnCard)
+        // outputCard(drawnCard)
+        index = 0
+        // no cards left
+        // if len(cards) == 0:
+        //     gamestate = Gamestate.GAME_OVER
+        //     celebration()
+        
+    }
+    
+    public getMode(): number {
+        return Modes.ONE
+    }
+    
+}
+
+class Mode2 extends Mode {
+    public drawCard() {
+        
+    }
+    
+    public getMode(): number {
+        return Modes.TWO
+    }
+    
+}
+
+class Mode3 extends Mode {
+    public drawCard() {
+        
+    }
+    
+    public getMode(): number {
+        return Modes.THREE
+    }
+    
+}
+
+class Mode4 extends Mode {
+    public drawCard() {
+        
+    }
+    
+    public getMode(): number {
+        return Modes.FOUR
+    }
+    
+}
+
+class Mode5 extends Mode {
+    public drawCard() {
+        
+    }
+    
+    public getMode(): number {
+        return Modes.FIVE
+    }
+    
+}
+
+class Spiel {
     static index: number
     private ___index_is_set: boolean
     private ___index: number
@@ -323,13 +410,13 @@ class Spiel {
         this.___gamestate = value
     }
     
-    static cards: string[]
+    static cards: any[]
     private ___cards_is_set: boolean
-    private ___cards: string[]
-    get cards(): string[] {
+    private ___cards: any[]
+    get cards(): any[] {
         return this.___cards_is_set ? this.___cards : Spiel.cards
     }
-    set cards(value: string[]) {
+    set cards(value: any[]) {
         this.___cards_is_set = true
         this.___cards = value
     }
@@ -345,8 +432,19 @@ class Spiel {
         this.___drawnCards = value
     }
     
+    static mode: Mode1
+    private ___mode_is_set: boolean
+    private ___mode: Mode1
+    get mode(): Mode1 {
+        return this.___mode_is_set ? this.___mode : Spiel.mode
+    }
+    set mode(value: Mode1) {
+        this.___mode_is_set = true
+        this.___mode = value
+    }
+    
     public static __initSpiel() {
-        Spiel.mode = Modes.ONE
+        Spiel.mode = null
         Spiel.index = 0
         Spiel.numberOfCards = 0
         Spiel.gamestate = Gamestate.MODES_SEL
@@ -354,17 +452,21 @@ class Spiel {
         Spiel.drawnCards = []
     }
     
-    constructor(mode: number, index: number, numberOfCards: number, gamestate: number, cards: any, drawnCards: any) {
-        this.initGame(mode, index, numberOfCards, gamestate, cards, drawnCards)
+    constructor(gameModeIndex: number, index: number, numberOfCards: number, gamestate: number, cards: any, drawnCards: any) {
+        this.initGame(gameModeIndex, index, numberOfCards, gamestate, cards, drawnCards)
     }
     
-    public initGame(mode: number, index: number, numberOfCards: number, gamestate: number, cards: string[], drawnCards: string[]) {
-        this.mode = mode
+    public initGame(gameModeIndex: number, index: number, numberOfCards: number, gamestate: number, cards: any[], drawnCards: string[]) {
         this.index = index
         this.numberOfCards = numberOfCards
         this.gamestate = gamestate
         this.cards = cards
         this.drawnCards = drawnCards
+        this.setGameMode(gameModeIndex)
+    }
+    
+    public setGameMode(gameModeIndex: number) {
+        this.mode = [new Mode1(), new Mode2(), new Mode3(), new Mode4(), new Mode5()][gameModeIndex]
     }
     
     public selectMode(btn: number) {
@@ -394,10 +496,15 @@ class Spiel {
     }
     
     public confirmMode() {
-        this.mode = this.index + 1
+        this.setGameMode(this.index + 1)
         this.index = 0
         basic.showNumber(this.index + 1, 50)
         this.gamestate = Gamestate.CARD_SEL
+    }
+    
+    //  set Mode
+    public modeInstance(): Mode1 {
+        return new Mode1()
     }
     
     public selectNumberOfCards(btn: number) {
@@ -432,7 +539,7 @@ class Spiel {
         this.initializeCards()
         this.index = 0
         this.gamestate = Gamestate.GAME_START
-        if (this.mode == Modes.TWO) {
+        if (this.mode.getMode() == Modes.TWO) {
             //  Start timer, duration: 100s
             timer = new Timer(100000)
             timer.startTimer()
@@ -445,7 +552,7 @@ class Spiel {
     // create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
     //  e.g 20 -> 1,2...20
     // list() doesn't work
-    public initializeCards(): string[] {
+    public initializeCards(): any[] {
         let cardlist = []
         console.log("numberOfCards:" + this.numberOfCards)
         for (let i = 1; i < this.numberOfCards + 1; i++) {
@@ -509,26 +616,6 @@ class Spiel {
         
     }
     
-    //  at the end check if there are any cards left
-    public drawCard() {
-        //  call random Num generator with length of cards
-        let generator = new Zufallsgenerator()
-        let indexForDrawing = generator.generateRandomNumber(this.cards.length)
-        //  remove drawnCard from cards and add it to drawnCards
-        let drawnCard = this.cards[indexForDrawing]
-        this.cards.removeAt(indexForDrawing)
-        this.drawnCards.push(drawnCard)
-        this.outputCard(drawnCard)
-        this.index = 0
-        // no cards left
-        if (this.cards.length == 0) {
-            this.gamestate = Gamestate.GAME_OVER
-            this.celebration()
-        }
-        
-        
-    }
-    
     //  depending on what type of symbol(int,string,char) card is, output different sounds
     public outputCard(card: string) {
         if (card == "P") {
@@ -544,11 +631,11 @@ class Spiel {
     
     // TODO reset game to beginning showing mode selection first 
     public exitGame() {
-        this.initGame(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
+        this.initGame(0, 0, 0, Gamestate.MODES_SEL, [], [])
     }
     
 }
 
 Spiel.__initSpiel()
 
-let spiel = new Spiel(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
+let spiel = new Spiel(0, 0, 0, Gamestate.MODES_SEL, [], [])
