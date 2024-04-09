@@ -327,7 +327,7 @@ class Mode {
     get cards(): string[] {
         return this.___cards_is_set ? this.___cards : Mode.cards
     }
-    set cards(value: any[]) {
+    set cards(value: string[]) {
         this.___cards_is_set = true
         this.___cards = value
     }
@@ -350,19 +350,11 @@ class Mode {
         Mode.drawnCards = []
     }
     
-    public drawnCard(): number {
-        return 1
-    }
-    
-    public outputCard(card: any) {
+    public drawnCard() {
         
     }
     
     public getMode() {
-        
-    }
-    
-    public celebration() {
         
     }
     
@@ -593,10 +585,7 @@ class Spiel {
         this.gamestate = Gamestate.CARD_SEL
     }
     
-    public modeInstance(): Mode1 {
-        return new Mode1()
-    }
-    
+    //  set Mode
     public selectNumberOfCards(btn: number) {
         if (btn == ButtonAction.RIGHT) {
             this.incrementNumberOfCards()
@@ -642,7 +631,7 @@ class Spiel {
     // create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
     //  e.g 20 -> 1,2...20
     // list() doesn't work
-    public initializeCards(): any[] {
+    public initializeCards(): string[] {
         let cardlist = []
         console.log("numberOfCards:" + this.mode.numberOfCards)
         for (let i = 1; i < this.mode.numberOfCards + 1; i++) {
