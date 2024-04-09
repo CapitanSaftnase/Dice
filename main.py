@@ -1,60 +1,49 @@
 def on_button_pressed_a():
     input_event(Button.A)
 
-input.on_button_pressed(Button.A, on_button_pressed_a)
-
 def on_button_pressed_b():
     input_event(Button.B)
-
-input.on_button_pressed(Button.B, on_button_pressed_b)
 
 def on_button_pressed_ab():
     input_event(Button.AB)
 
-input.on_button_pressed(Button.AB, on_button_pressed_ab)
-
 def on_gesture_shake():
     input_event(Gesture.SHAKE)
     pass
+
+input.on_button_pressed(Button.A, on_button_pressed_a)
+input.on_button_pressed(Button.B, on_button_pressed_b)
+input.on_button_pressed(Button.AB, on_button_pressed_ab)
 input.on_gesture(Gesture.SHAKE, on_gesture_shake)
 
+
+# Handle input based on the current state of the game
 def input_event(btn):
     if spiel.gamestate == Gamestate.MODES_SEL:
         if btn == Button.AB:
-            spiel.confirmMode()
+            spiel.confirm_mode()
         elif btn == Button.A:
-            spiel.selectMode(ButtonAction.LEFT)
+            spiel.select_mode(ButtonAction.LEFT)
         elif btn == Button.B:
-            spiel.selectMode(ButtonAction.RIGHT)
+            spiel.select_mode(ButtonAction.RIGHT)
     elif spiel.gamestate == Gamestate.CARD_SEL:
         if btn == Button.A:
-            spiel.selectNumberOfCards(ButtonAction.LEFT)
+            spiel.select_number_of_cards(ButtonAction.LEFT)
         elif btn == Button.B:
-            spiel.selectNumberOfCards(ButtonAction.RIGHT)
+            spiel.select_number_of_cards(ButtonAction.RIGHT)
         elif btn == Button.AB:
-            spiel.confirmNumberOfCards()
+            spiel.confirm_number_of_cards()
     elif spiel.gamestate == Gamestate.GAME_START:
         if btn == Gesture.SHAKE:
-            spiel.drawCard()
+            spiel.draw_card()
         elif btn == Button.AB:
-            spiel.userInducedExit()
+            spiel.user_induced_exit()
         elif btn == Button.B:
-            spiel.goForward()
+            spiel.go_forward()
         elif btn == Button.A:
-            spiel.goBackward()
+            spiel.go_backward()
     elif spiel.gamestate == Gamestate.GAME_OVER:
         pass
-
-class Zufallsgenerator():
-    cards = 0
-    def init(self,cards):
-        self.cards = cards
-
-    def generateRandomNumber(self, cards):
-        import Math.random
-        random_index = randint(0, cards -1 )
-
-        return random_index
 
 
 class Timer:
@@ -67,10 +56,12 @@ class Timer:
 
 timer = Timer(10000)
 
+
 class ButtonAction(Enum):
     LEFT = 1
     RIGHT = 2
     BOTH = 3
+
 
 class Modes(Enum):
     ONE = 1
@@ -94,71 +85,73 @@ class Gamestate(Enum):
     def items(self, i):
         return ["MODE", "CARD", "GAME", "GAMEOVER"][i]
 
+
 class Spiel:
     mode = Modes.ONE
     index = 0
-    numberOfCards = 0
+    number_of_cards = 0
     gamestate = Gamestate.MODES_SEL
     cards = []
-    drawnCards = []
+    drawn_cards = []
 
-    def __init__(self, mode, index, numberOfCards, gamestate, cards, drawnCards):
-        self.initGame(mode, index, numberOfCards, gamestate, cards, drawnCards)
+    def __init__(self, mode, index, number_of_cards, gamestate, cards, drawn_cards):
+        self.init_game(mode, index, number_of_cards, gamestate, cards, drawn_cards)
 
-    def initGame(self, mode, index, numberOfCards, gamestate, cards, drawnCards):
+    def init_game(self, mode, index, number_of_cards, gamestate, cards, drawn_cards):
         self.mode = mode
         self.index = index
-        self.numberOfCards = numberOfCards
+        self.number_of_cards = number_of_cards
         self.gamestate = gamestate
         self.cards = cards
-        self.drawnCards = drawnCards
+        self.drawn_cards = drawn_cards
 
-
-    def selectMode(self, btn):
+    def select_mode(self, btn):
         if btn == ButtonAction.RIGHT:
-            self.incrementMode()
+            self.increment_mode()
+
         if btn == ButtonAction.LEFT:
-            self.decrementMode()
+            self.decrement_mode()
+
         basic.show_string(Modes().items(self.index), 50)
 
-    def incrementMode(self):
+    def increment_mode(self):
         self.index += 1
         self.index %= len(Modes())
 
-    def decrementMode(self):
+    def decrement_mode(self):
         if self.index > 0:
             self.index -= 1
         else:
             self.index = len(Modes()) - 1
 
-    def confirmMode(self):
+    def confirm_mode(self):
         self.mode = self.index+1
         self.index = 0
         basic.show_number(self.index+1, 50)
         self.gamestate = Gamestate.CARD_SEL
 
-    def selectNumberOfCards(self, btn):
+    def select_number_of_cards(self, btn):
         if btn == ButtonAction.RIGHT:
-            self.incrementNumberOfCards()
+            self.increment_number_of_cards()
         elif btn == ButtonAction.LEFT:
-            self.decrementNumberOfCards()
+            self.decrement_number_of_cards()
         basic.show_number(self.index+1, 50)
 
-    def incrementNumberOfCards(self):
+    def increment_number_of_cards(self):
         self.index += 1
         self.index %= 100
 
-    def decrementNumberOfCards(self):
+    def decrement_number_of_cards(self):
         if self.index > 0:
             self.index -= 1
         else:
             self.index = 99
 
-    # changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
-    def confirmNumberOfCards(self):
-        self.numberOfCards = self.index + 1
+    # Changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
+    def confirm_number_of_cards(self):
+        self.number_of_cards = self.index + 1
         basic.show_number(self.index+1, 50)
-        self.initializeCards()
+        self.initialize_cards()
         self.index = 0
         self.gamestate = Gamestate.GAME_START
         if self.mode == Modes.TWO:
@@ -168,73 +161,71 @@ class Spiel:
         basic.clear_screen()
         basic.show_icon(IconNames.HEART)
 
-    #create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
+    # Create a List with every number up to number_of_cards starting from 1 at index 0 up to and including number_of_cards
     # e.g 20 -> 1,2...20
-    #list() doesn't work
-    def initializeCards(self):
+    # list() doesn't work
+    def initialize_cards(self):
         cardlist = []
-        print("numberOfCards:" + self.numberOfCards)
-        for i in range(1, self.numberOfCards + 1):
-            cardlist.push("" +i)
+        print("number_of_cards:" + self.number_of_cards)
+        for i in range(1, self.number_of_cards + 1):
+            cardlist.push("" + i)
         
         self.cards = cardlist
         return cardlist
 
-    def goForward(self):
+    def go_forward(self):
         if self.index < 0:
             self.index += 1
-            doneCards = len(self.drawnCards)
-            self.outputCard(self.drawnCards[doneCards+self.index-1])
+            doneCards = len(self.drawn_cards)
+            self.output_card(self.drawn_cards[doneCards+self.index-1])
 
-    def goBackward(self):
-        doneCards = len(self.drawnCards)
+    def go_backward(self):
+        doneCards = len(self.drawn_cards)
         if self.index > -3 and doneCards > -self.index+1:
             self.index -= 1
-            self.outputCard(self.drawnCards[doneCards+self.index-1])
+            self.output_card(self.drawn_cards[doneCards+self.index - 1])
 
-
-# outputs sound/image and how many cards were done
-    # depending on how many show different images e.g hear/smiley/sad smiley
+    # Outputs sound/image and how many cards were done
+    # Depending on how many show different images e.g hear/smiley/sad smiley
     def celebration(self):
-        doneCards = len(self.drawnCards)
+        doneCards = len(self.drawn_cards)
         # 100% done
-        if doneCards == self.numberOfCards:
+        if doneCards == self.number_of_cards:
             #TODO special action sounds (melody or so)
             basic.show_icon(IconNames.HAPPY)
             pass
-        # 50%    
-        elif doneCards >= self.numberOfCards / 2:
-            #TODO 
+        # 50%
+        elif doneCards >= self.number_of_cards / 2:
+            #TODO
             basic.show_icon(IconNames.DUCK)
             pass
         # < 50%
         else:
             basic.show_icon(IconNames.SAD)
-        #game waits for 3 secs before restarting
+        # Game waits for 3 secs before restarting
         control.wait_micros(2000000)
         basic.show_number(doneCards, 50)
         control.wait_micros(2000000)
         basic.clear_screen()
-        self.exitGame()
+        self.exit_game()
         pass
 
-    # triggered with A+B -> change gamestate and call celebration()
-    def userInducedExit(self):
+    # Triggered with A+B -> change gamestate and call celebration()
+    def user_induced_exit(self):
         gamestate = Gamestate.GAME_OVER
         self.celebration()
         pass
 
-# at the end check if there are any cards left
-    def drawCard(self):
+    # At the end check if there are any cards left
+    def draw_card(self):
         # call random Num generator with length of cards
-        generator = Zufallsgenerator()
-        indexForDrawing = generator.generateRandomNumber(len(self.cards))
-        # remove drawnCard from cards and add it to drawnCards
+        indexForDrawing = random_number(len(self.cards))
+        # remove drawnCard from cards and add it to drawn_cards
         drawnCard = self.cards[indexForDrawing]
         self.cards.remove_at(indexForDrawing)
-        self.drawnCards.push(drawnCard)
+        self.drawn_cards.push(drawnCard)
 
-        self.outputCard(drawnCard)
+        self.output_card(drawnCard)
         self.index = 0
         #no cards left
         if len(self.cards) == 0:
@@ -243,8 +234,8 @@ class Spiel:
         pass
 
 
-# depending on what type of symbol(int,string,char) card is, output different sounds
-    def outputCard(self, card): 
+    # Depending on what type of symbol(int,string,char) card is, output different sounds
+    def output_card(self, card):
         if card == "P":
             basic.show_string(card, 50)
         elif card == "S":
@@ -253,8 +244,16 @@ class Spiel:
             basic.show_string(card, 50)
         pass
 
-    #TODO reset game to beginning showing mode selection first 
-    def exitGame(self):
-        self.initGame(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
+    #TODO: Reset game to beginning showing mode selection first
+    def exit_game(self):
+        self.init_game(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
+
 
 spiel = Spiel(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
+
+
+# Various helper functions
+
+# Generates a random number between 0 and max_value excluded
+def random_number(max_value):
+    return randint(0, max_value - 1)

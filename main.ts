@@ -11,34 +11,35 @@ input.onGesture(Gesture.Shake, function on_gesture_shake() {
     input_event(Gesture.Shake)
     
 })
+//  Handle input based on the current state of the game
 function input_event(btn: number) {
     if (spiel.gamestate == Gamestate.MODES_SEL) {
         if (btn == Button.AB) {
-            spiel.confirmMode()
+            spiel.confirm_mode()
         } else if (btn == Button.A) {
-            spiel.selectMode(ButtonAction.LEFT)
+            spiel.select_mode(ButtonAction.LEFT)
         } else if (btn == Button.B) {
-            spiel.selectMode(ButtonAction.RIGHT)
+            spiel.select_mode(ButtonAction.RIGHT)
         }
         
     } else if (spiel.gamestate == Gamestate.CARD_SEL) {
         if (btn == Button.A) {
-            spiel.selectNumberOfCards(ButtonAction.LEFT)
+            spiel.select_number_of_cards(ButtonAction.LEFT)
         } else if (btn == Button.B) {
-            spiel.selectNumberOfCards(ButtonAction.RIGHT)
+            spiel.select_number_of_cards(ButtonAction.RIGHT)
         } else if (btn == Button.AB) {
-            spiel.confirmNumberOfCards()
+            spiel.confirm_number_of_cards()
         }
         
     } else if (spiel.gamestate == Gamestate.GAME_START) {
         if (btn == Gesture.Shake) {
-            spiel.drawCard()
+            spiel.draw_card()
         } else if (btn == Button.AB) {
-            spiel.userInducedExit()
+            spiel.user_induced_exit()
         } else if (btn == Button.B) {
-            spiel.goForward()
+            spiel.go_forward()
         } else if (btn == Button.A) {
-            spiel.goBackward()
+            spiel.go_backward()
         }
         
     } else if (spiel.gamestate == Gamestate.GAME_OVER) {
@@ -46,35 +47,6 @@ function input_event(btn: number) {
     }
     
 }
-
-class Zufallsgenerator {
-    static cards: number
-    private ___cards_is_set: boolean
-    private ___cards: number
-    get cards(): number {
-        return this.___cards_is_set ? this.___cards : Zufallsgenerator.cards
-    }
-    set cards(value: number) {
-        this.___cards_is_set = true
-        this.___cards = value
-    }
-    
-    public static __initZufallsgenerator() {
-        Zufallsgenerator.cards = 0
-    }
-    
-    public init(cards: number) {
-        this.cards = cards
-    }
-    
-    public generateRandomNumber(cards: number): number {
-        let random_index = randint(0, cards - 1)
-        return random_index
-    }
-    
-}
-
-Zufallsgenerator.__initZufallsgenerator()
 
 class Timer {
     static duration: number
@@ -301,15 +273,15 @@ class Spiel {
         this.___index = value
     }
     
-    static numberOfCards: number
-    private ___numberOfCards_is_set: boolean
-    private ___numberOfCards: number
-    get numberOfCards(): number {
-        return this.___numberOfCards_is_set ? this.___numberOfCards : Spiel.numberOfCards
+    static number_of_cards: number
+    private ___number_of_cards_is_set: boolean
+    private ___number_of_cards: number
+    get number_of_cards(): number {
+        return this.___number_of_cards_is_set ? this.___number_of_cards : Spiel.number_of_cards
     }
-    set numberOfCards(value: number) {
-        this.___numberOfCards_is_set = true
-        this.___numberOfCards = value
+    set number_of_cards(value: number) {
+        this.___number_of_cards_is_set = true
+        this.___number_of_cards = value
     }
     
     static gamestate: number
@@ -334,57 +306,57 @@ class Spiel {
         this.___cards = value
     }
     
-    static drawnCards: string[]
-    private ___drawnCards_is_set: boolean
-    private ___drawnCards: string[]
-    get drawnCards(): string[] {
-        return this.___drawnCards_is_set ? this.___drawnCards : Spiel.drawnCards
+    static drawn_cards: string[]
+    private ___drawn_cards_is_set: boolean
+    private ___drawn_cards: string[]
+    get drawn_cards(): string[] {
+        return this.___drawn_cards_is_set ? this.___drawn_cards : Spiel.drawn_cards
     }
-    set drawnCards(value: string[]) {
-        this.___drawnCards_is_set = true
-        this.___drawnCards = value
+    set drawn_cards(value: string[]) {
+        this.___drawn_cards_is_set = true
+        this.___drawn_cards = value
     }
     
     public static __initSpiel() {
         Spiel.mode = Modes.ONE
         Spiel.index = 0
-        Spiel.numberOfCards = 0
+        Spiel.number_of_cards = 0
         Spiel.gamestate = Gamestate.MODES_SEL
         Spiel.cards = []
-        Spiel.drawnCards = []
+        Spiel.drawn_cards = []
     }
     
-    constructor(mode: number, index: number, numberOfCards: number, gamestate: number, cards: any, drawnCards: any) {
-        this.initGame(mode, index, numberOfCards, gamestate, cards, drawnCards)
+    constructor(mode: number, index: number, number_of_cards: number, gamestate: number, cards: any, drawn_cards: any) {
+        this.init_game(mode, index, number_of_cards, gamestate, cards, drawn_cards)
     }
     
-    public initGame(mode: number, index: number, numberOfCards: number, gamestate: number, cards: string[], drawnCards: string[]) {
+    public init_game(mode: number, index: number, number_of_cards: number, gamestate: number, cards: string[], drawn_cards: string[]) {
         this.mode = mode
         this.index = index
-        this.numberOfCards = numberOfCards
+        this.number_of_cards = number_of_cards
         this.gamestate = gamestate
         this.cards = cards
-        this.drawnCards = drawnCards
+        this.drawn_cards = drawn_cards
     }
     
-    public selectMode(btn: number) {
+    public select_mode(btn: number) {
         if (btn == ButtonAction.RIGHT) {
-            this.incrementMode()
+            this.increment_mode()
         }
         
         if (btn == ButtonAction.LEFT) {
-            this.decrementMode()
+            this.decrement_mode()
         }
         
         basic.showString(new Modes().items(this.index), 50)
     }
     
-    public incrementMode() {
+    public increment_mode() {
         this.index += 1
         this.index %= new Modes().length()
     }
     
-    public decrementMode() {
+    public decrement_mode() {
         if (this.index > 0) {
             this.index -= 1
         } else {
@@ -393,29 +365,29 @@ class Spiel {
         
     }
     
-    public confirmMode() {
+    public confirm_mode() {
         this.mode = this.index + 1
         this.index = 0
         basic.showNumber(this.index + 1, 50)
         this.gamestate = Gamestate.CARD_SEL
     }
     
-    public selectNumberOfCards(btn: number) {
+    public select_number_of_cards(btn: number) {
         if (btn == ButtonAction.RIGHT) {
-            this.incrementNumberOfCards()
+            this.increment_number_of_cards()
         } else if (btn == ButtonAction.LEFT) {
-            this.decrementNumberOfCards()
+            this.decrement_number_of_cards()
         }
         
         basic.showNumber(this.index + 1, 50)
     }
     
-    public incrementNumberOfCards() {
+    public increment_number_of_cards() {
         this.index += 1
         this.index %= 100
     }
     
-    public decrementNumberOfCards() {
+    public decrement_number_of_cards() {
         if (this.index > 0) {
             this.index -= 1
         } else {
@@ -424,12 +396,12 @@ class Spiel {
         
     }
     
-    //  changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
-    public confirmNumberOfCards() {
+    //  Changes gamestate and displays the symbol for starting the game. Then game waits for shake-input
+    public confirm_number_of_cards() {
         let timer: Timer;
-        this.numberOfCards = this.index + 1
+        this.number_of_cards = this.index + 1
         basic.showNumber(this.index + 1, 50)
-        this.initializeCards()
+        this.initialize_cards()
         this.index = 0
         this.gamestate = Gamestate.GAME_START
         if (this.mode == Modes.TWO) {
@@ -442,50 +414,50 @@ class Spiel {
         basic.showIcon(IconNames.Heart)
     }
     
-    // create a List with every number up to numberOfCards starting from 1 at index 0 up to and including numberOfCards
+    //  Create a List with every number up to number_of_cards starting from 1 at index 0 up to and including number_of_cards
     //  e.g 20 -> 1,2...20
-    // list() doesn't work
-    public initializeCards(): string[] {
+    //  list() doesn't work
+    public initialize_cards(): string[] {
         let cardlist = []
-        console.log("numberOfCards:" + this.numberOfCards)
-        for (let i = 1; i < this.numberOfCards + 1; i++) {
+        console.log("number_of_cards:" + this.number_of_cards)
+        for (let i = 1; i < this.number_of_cards + 1; i++) {
             cardlist.push("" + i)
         }
         this.cards = cardlist
         return cardlist
     }
     
-    public goForward() {
+    public go_forward() {
         let doneCards: any;
         if (this.index < 0) {
             this.index += 1
-            doneCards = this.drawnCards.length
-            this.outputCard(this.drawnCards[doneCards + this.index - 1])
+            doneCards = this.drawn_cards.length
+            this.output_card(this.drawn_cards[doneCards + this.index - 1])
         }
         
     }
     
-    public goBackward() {
-        let doneCards = this.drawnCards.length
+    public go_backward() {
+        let doneCards = this.drawn_cards.length
         if (this.index > -3 && doneCards > -this.index + 1) {
             this.index -= 1
-            this.outputCard(this.drawnCards[doneCards + this.index - 1])
+            this.output_card(this.drawn_cards[doneCards + this.index - 1])
         }
         
     }
     
-    //  outputs sound/image and how many cards were done
-    //  depending on how many show different images e.g hear/smiley/sad smiley
+    //  Outputs sound/image and how many cards were done
+    //  Depending on how many show different images e.g hear/smiley/sad smiley
     public celebration() {
-        let doneCards = this.drawnCards.length
+        let doneCards = this.drawn_cards.length
         //  100% done
-        if (doneCards == this.numberOfCards) {
+        if (doneCards == this.number_of_cards) {
             // TODO special action sounds (melody or so)
             basic.showIcon(IconNames.Happy)
             
-        } else if (doneCards >= this.numberOfCards / 2) {
-            //  50%    
-            // TODO 
+        } else if (doneCards >= this.number_of_cards / 2) {
+            //  50%
+            // TODO
             basic.showIcon(IconNames.Duck)
             
         } else {
@@ -493,32 +465,31 @@ class Spiel {
             basic.showIcon(IconNames.Sad)
         }
         
-        // game waits for 3 secs before restarting
+        //  Game waits for 3 secs before restarting
         control.waitMicros(2000000)
         basic.showNumber(doneCards, 50)
         control.waitMicros(2000000)
         basic.clearScreen()
-        this.exitGame()
+        this.exit_game()
         
     }
     
-    //  triggered with A+B -> change gamestate and call celebration()
-    public userInducedExit() {
+    //  Triggered with A+B -> change gamestate and call celebration()
+    public user_induced_exit() {
         let gamestate = Gamestate.GAME_OVER
         this.celebration()
         
     }
     
-    //  at the end check if there are any cards left
-    public drawCard() {
+    //  At the end check if there are any cards left
+    public draw_card() {
         //  call random Num generator with length of cards
-        let generator = new Zufallsgenerator()
-        let indexForDrawing = generator.generateRandomNumber(this.cards.length)
-        //  remove drawnCard from cards and add it to drawnCards
+        let indexForDrawing = random_number(this.cards.length)
+        //  remove drawnCard from cards and add it to drawn_cards
         let drawnCard = this.cards[indexForDrawing]
         this.cards.removeAt(indexForDrawing)
-        this.drawnCards.push(drawnCard)
-        this.outputCard(drawnCard)
+        this.drawn_cards.push(drawnCard)
+        this.output_card(drawnCard)
         this.index = 0
         // no cards left
         if (this.cards.length == 0) {
@@ -529,8 +500,8 @@ class Spiel {
         
     }
     
-    //  depending on what type of symbol(int,string,char) card is, output different sounds
-    public outputCard(card: string) {
+    //  Depending on what type of symbol(int,string,char) card is, output different sounds
+    public output_card(card: string) {
         if (card == "P") {
             basic.showString(card, 50)
         } else if (card == "S") {
@@ -542,9 +513,9 @@ class Spiel {
         
     }
     
-    // TODO reset game to beginning showing mode selection first 
-    public exitGame() {
-        this.initGame(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
+    // TODO: Reset game to beginning showing mode selection first
+    public exit_game() {
+        this.init_game(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
     }
     
 }
@@ -552,3 +523,9 @@ class Spiel {
 Spiel.__initSpiel()
 
 let spiel = new Spiel(Modes.ONE, 0, 0, Gamestate.MODES_SEL, [], [])
+//  Various helper functions
+//  Generates a random number between 0 and max_value excluded
+function random_number(max_value: number): number {
+    return randint(0, max_value - 1)
+}
+
