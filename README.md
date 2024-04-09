@@ -5,7 +5,7 @@
 
 Dieses Repository kann als **Erweiterung** in MakeCode hinzugefügt werden.
 
-* öffne [https://makecode.microbit.org/](https://makecode.microbit.org/)
+* öffne [https://makecode.microbit.org/beta/](https://makecode.microbit.org/beta/)
 * klicke auf **Neues Projekt**
 * klicke auf **Erweiterungen** unter dem Zahnrad-Menü
 * nach **https://github.com/capitansaftnase/dice** suchen und importieren
@@ -14,7 +14,7 @@ Dieses Repository kann als **Erweiterung** in MakeCode hinzugefügt werden.
 
 Um dieses Repository in MakeCode zu bearbeiten.
 
-* öffne [https://makecode.microbit.org/](https://makecode.microbit.org/)
+* öffne [https://makecode.microbit.org/beta/](https://makecode.microbit.org/beta/)
 * klicke auf **Importieren** und dann auf **Importiere URL**
 * füge **https://github.com/capitansaftnase/dice** ein und klicke auf Importieren
 

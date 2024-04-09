@@ -10,3 +10,7 @@ _site
 *.tgz
 .header.json
 .simstate.json
+_config.yml
+.vscode/
+*.ts
+*.blocks
