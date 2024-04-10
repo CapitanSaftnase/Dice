@@ -4,7 +4,7 @@ let DEFAULT_NUMBER_OF_CARDS_SINGLEPLAYER = 5
 let DEFAULT_NUMBER_OF_CARDS_TIMED = 37
 let DEFAULT_NUMBER_OF_CARDS_FAMILY = 9
 let DEFAULT_NUMBER_OF_PLAYERS_PICKER = 4
-let PROBABILITY_SPECIAL_CARD = 30
+let PROBABILITY_SPECIAL_CARD = 100
 //  Probabilities have to add up to 100%
 let PROBABILITY_BONBON = 50
 let PROBABILITY_SONG = 35
@@ -299,11 +299,23 @@ class Gamestate {
         this.___GAME_OVER = value
     }
     
+    static INVALID: number
+    private ___INVALID_is_set: boolean
+    private ___INVALID: number
+    get INVALID(): number {
+        return this.___INVALID_is_set ? this.___INVALID : Gamestate.INVALID
+    }
+    set INVALID(value: number) {
+        this.___INVALID_is_set = true
+        this.___INVALID = value
+    }
+    
     public static __initGamestate() {
         Gamestate.MODE_SELECT = 1
         Gamestate.CARD_SELECT = 2
         Gamestate.GAME_START = 3
         Gamestate.GAME_OVER = 4
+        Gamestate.INVALID = 5
     }
     
     public length(): number {
@@ -405,12 +417,17 @@ class Spiel {
             this.index = DEFAULT_NUMBER_OF_PLAYERS_PICKER
             this.gamestate = Gamestate.CARD_SELECT
             basic.showNumber(this.index, DISPLAY_INTERVAL)
-            //  TODO: Implement
             return
         }
         
         if (this.mode == Modes.TOP_OF_THE_DECK) {
-            //  TODO: Implement
+            this.index = 3
+            this.number_of_cards = this.index
+            this.initialize_cards()
+            this.index = 0
+            this.gamestate = Gamestate.GAME_START
+            basic.clearScreen()
+            basic.showIcon(IconNames.Heart)
             return
         }
         
@@ -598,7 +615,7 @@ class Spiel {
             
         }
         
-        if (this.mode == Modes.PICKER) {
+        if (this.mode == Modes.PICKER || this.mode == Modes.TOP_OF_THE_DECK) {
             index_for_drawing = random_number(this.cards.length)
             //  Remove drawn_card from cards and add it to drawn_cards
             drawn_card = this.cards[index_for_drawing]
@@ -610,10 +627,6 @@ class Spiel {
                 this.gamestate = Gamestate.GAME_OVER
                 this.celebration()
             }
-            
-        }
-        
-        if (this.mode == Modes.TOP_OF_THE_DECK) {
             
         }
         

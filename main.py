@@ -5,7 +5,7 @@ DEFAULT_NUMBER_OF_CARDS_TIMED = 37
 DEFAULT_NUMBER_OF_CARDS_FAMILY = 9
 DEFAULT_NUMBER_OF_PLAYERS_PICKER = 4
 
-PROBABILITY_SPECIAL_CARD = 30
+PROBABILITY_SPECIAL_CARD = 100
 
 # Probabilities have to add up to 100%
 PROBABILITY_BONBON = 50
@@ -157,6 +157,7 @@ class Gamestate(Enum):
     CARD_SELECT = 2
     GAME_START = 3
     GAME_OVER = 4
+    INVALID = 5
 
     def length(self):
         return 4
@@ -187,6 +188,7 @@ class Spiel:
 
         self.timer = Timer()
         self.time_limit_in_seconds = TIME_LIMIT_IN_SECONDS
+
         basic.show_string(Modes().items(self.index), DISPLAY_INTERVAL)
 
     def select_mode(self, event):
@@ -234,13 +236,18 @@ class Spiel:
             self.index = DEFAULT_NUMBER_OF_PLAYERS_PICKER
             self.gamestate = Gamestate.CARD_SELECT
             basic.show_number(self.index, DISPLAY_INTERVAL)
-            # TODO: Implement
             return
 
         if self.mode == Modes.TOP_OF_THE_DECK:
-            # TODO: Implement
-            return
+            self.index = 3
+            self.number_of_cards = self.index
+            self.initialize_cards()
+            self.index = 0
+            self.gamestate = Gamestate.GAME_START
 
+            basic.clear_screen()
+            basic.show_icon(IconNames.HEART)
+            return
 
     def select_number_of_cards(self, event):
         if event == ButtonAction.RIGHT:
@@ -395,7 +402,7 @@ class Spiel:
                 control.wait_micros(2000000)
                 self.celebration()
 
-        if self.mode == Modes.PICKER:
+        if self.mode == Modes.PICKER or self.mode == Modes.TOP_OF_THE_DECK:
             index_for_drawing = random_number(len(self.cards))
 
             # Remove drawn_card from cards and add it to drawn_cards
@@ -409,9 +416,6 @@ class Spiel:
             if len(self.cards) == 0:
                 self.gamestate = Gamestate.GAME_OVER
                 self.celebration()
-
-        if self.mode == Modes.TOP_OF_THE_DECK:
-            pass
 
     # Depending on what type of symbol(int, string, char) card is, output different sounds
     def output_card(self, card):
