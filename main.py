@@ -187,8 +187,6 @@ class Spiel:
 
         self.timer = Timer()
         self.time_limit_in_seconds = TIME_LIMIT_IN_SECONDS
-
-        play_start_music()
         basic.show_string(Modes().items(self.index), DISPLAY_INTERVAL)
 
     def select_mode(self, event):
@@ -459,7 +457,7 @@ class Spiel:
 
 
 spiel = Spiel(Modes.SINGLEPLAYER, 0, 0, Gamestate.MODE_SELECT, [], [])
-
+play_start_music()
 
 # Various helper functions
 

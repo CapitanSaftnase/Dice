@@ -348,7 +348,6 @@ class Spiel {
         this.drawn_cards = drawn_cards
         this.timer = new Timer()
         this.time_limit_in_seconds = TIME_LIMIT_IN_SECONDS
-        play_start_music()
         basic.showString(new Modes().items(this.index), DISPLAY_INTERVAL)
     }
     
@@ -645,7 +644,13 @@ class Spiel {
                 `)
             play_pause_music()
         } else if (card == "Abgeben") {
-            basic.showIcon(IconNames.Sword)
+            basic.showLeds(`
+                . . . # #
+                . . # # #
+                # # # # .
+                . # # . .
+                # . # . .
+                `)
             play_abgeben_music()
         } else {
             basic.showString(card, DISPLAY_INTERVAL)
@@ -663,6 +668,7 @@ class Spiel {
 }
 
 let spiel = new Spiel(Modes.SINGLEPLAYER, 0, 0, Gamestate.MODE_SELECT, [], [])
+play_start_music()
 //  Various helper functions
 //  Generates a random number between 0 and max_value excluded
 function random_number(max_value: number): number {
