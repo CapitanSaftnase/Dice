@@ -309,6 +309,8 @@ class Spiel:
     # Outputs sound/image and how many cards were done
     # Depending on how many show different images e.g hear/smiley/sad smiley
     def celebration(self):
+        # set time to wait inbetween animations in micro seconds
+        TIME_TO_WAIT = 2000000
         done_cards = len(self.drawn_cards) - self.number_of_special_cards
 
         if self.mode == Modes.SINGLEPLAYER or self.mode == Modes.FAMILY:
@@ -325,22 +327,22 @@ class Spiel:
                 basic.show_icon(IconNames.SAD)
 
             # Game waits for 2 seconds before restarting
-            control.wait_micros(2000000)
+            control.wait_micros(TIME_TO_WAIT)
             basic.show_number(done_cards, DISPLAY_INTERVAL)
-            control.wait_micros(2000000)
+            control.wait_micros(TIME_TO_WAIT)
             basic.clear_screen()
             self.exit_game()
 
         if self.mode == Modes.TIMED:
             # TODO: A cool sound to indicate that the time is up
             basic.show_icon(IconNames.SURPRISED)
-            control.wait_micros(2000000)
+            control.wait_micros(TIME_TO_WAIT)
             basic.show_number(done_cards, DISPLAY_INTERVAL)
-            control.wait_micros(2000000)
+            control.wait_micros(TIME_TO_WAIT)
             basic.clear_screen()
             self.exit_game()
 
-        if self.mode == Modes.PICKER or self.mode == Modes.TOP_OF_THE_DECK:
+        if self.mode == Modes.PICKER :
             # TODO: Make a cool celebration.
             if done_cards > self.number_of_cards * 4:
                 basic.show_icon(IconNames.HAPPY)
@@ -350,10 +352,15 @@ class Spiel:
                 basic.show_icon(IconNames.SMALL_HEART)
             else:
                 basic.show_icon(IconNames.SAD)
-                
-            control.wait_micros(2000000)
+            
+            control.wait_micros(TIME_TO_WAIT)
             music.stop_melody(MelodyStopOptions.ALL)
             self.exit_game()
+        if self.mode == Modes.TOP_OF_THE_DECK:
+            basic.show_icon(IconNames.GIRAFFE)
+            control.wait_micros(TIME_TO_WAIT)
+            self.exit_game()
+            pass
 
     # Triggered with A + B -> change gamestate and call celebration()
     def user_induced_exit(self):

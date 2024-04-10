@@ -511,6 +511,8 @@ class Spiel {
     //  Outputs sound/image and how many cards were done
     //  Depending on how many show different images e.g hear/smiley/sad smiley
     public celebration() {
+        //  set time to wait inbetween animations in micro seconds
+        let TIME_TO_WAIT = 2000000
         let done_cards = this.drawn_cards.length - this.number_of_special_cards
         if (this.mode == Modes.SINGLEPLAYER || this.mode == Modes.FAMILY) {
             //  100% done
@@ -527,9 +529,9 @@ class Spiel {
             }
             
             //  Game waits for 2 seconds before restarting
-            control.waitMicros(2000000)
+            control.waitMicros(TIME_TO_WAIT)
             basic.showNumber(done_cards, DISPLAY_INTERVAL)
-            control.waitMicros(2000000)
+            control.waitMicros(TIME_TO_WAIT)
             basic.clearScreen()
             this.exit_game()
         }
@@ -537,14 +539,14 @@ class Spiel {
         if (this.mode == Modes.TIMED) {
             //  TODO: A cool sound to indicate that the time is up
             basic.showIcon(IconNames.Surprised)
-            control.waitMicros(2000000)
+            control.waitMicros(TIME_TO_WAIT)
             basic.showNumber(done_cards, DISPLAY_INTERVAL)
-            control.waitMicros(2000000)
+            control.waitMicros(TIME_TO_WAIT)
             basic.clearScreen()
             this.exit_game()
         }
         
-        if (this.mode == Modes.PICKER || this.mode == Modes.TOP_OF_THE_DECK) {
+        if (this.mode == Modes.PICKER) {
             //  TODO: Make a cool celebration.
             if (done_cards > this.number_of_cards * 4) {
                 basic.showIcon(IconNames.Happy)
@@ -555,9 +557,16 @@ class Spiel {
                 basic.showIcon(IconNames.Sad)
             }
             
-            control.waitMicros(2000000)
+            control.waitMicros(TIME_TO_WAIT)
             music.stopMelody(MelodyStopOptions.All)
             this.exit_game()
+        }
+        
+        if (this.mode == Modes.TOP_OF_THE_DECK) {
+            basic.showIcon(IconNames.Giraffe)
+            control.waitMicros(TIME_TO_WAIT)
+            this.exit_game()
+            
         }
         
     }
