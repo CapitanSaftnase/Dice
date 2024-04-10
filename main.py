@@ -65,7 +65,14 @@ def play_draw_card_music():
     music.play(
         music.string_playable("C E - - - - - - ", 450),
         music.PlaybackMode.UNTIL_DONE)
+def play_timeup_music():
+    music.play(music.string_playable("C G C5 G C G C5 G ", 400), music.PlaybackMode.LOOPING_IN_BACKGROUND)
 
+def play_happy_music():
+    music.play(music.string_playable("E F G F G A B C5 ", 350),
+        music.PlaybackMode.UNTIL_DONE)
+    music.play(music.string_playable("E F G F G A B C5 ", 350),
+            music.PlaybackMode.UNTIL_DONE)
 
 # Set callbacks
 input.on_button_pressed(Button.A, on_button_pressed_a)
@@ -306,8 +313,8 @@ class Spiel:
 
         if self.mode == Modes.SINGLEPLAYER or self.mode == Modes.FAMILY:
             # 100% done
-            if done_cards == self.number_of_cards:
-                #TODO special action sounds (e.g. melody)
+            if done_cards >= self.number_of_cards:
+                play_happy_music()
                 basic.show_icon(IconNames.HAPPY)
             # 50%
             elif done_cards >= self.number_of_cards / 2:
@@ -377,8 +384,7 @@ class Spiel:
 
             if self.mode == Modes.TIMED and self.timer.time_is_up():
                 self.gamestate = Gamestate.GAME_OVER
-                music.play(music.string_playable("C G C5 G C G C5 G ", 400),
-                    music.PlaybackMode.LOOPING_IN_BACKGROUND)
+                play_timeup_music()
                 control.wait_micros(400 * 10000)
                 music.stop_all_sounds()
                 self.celebration()

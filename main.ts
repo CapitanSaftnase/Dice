@@ -41,6 +41,15 @@ function play_draw_card_music() {
     music.play(music.stringPlayable("C E - - - - - - ", 450), music.PlaybackMode.UntilDone)
 }
 
+function play_timeup_music() {
+    music.play(music.stringPlayable("C G C5 G C G C5 G ", 400), music.PlaybackMode.LoopingInBackground)
+}
+
+function play_happy_music() {
+    music.play(music.stringPlayable("E F G F G A B C5 ", 350), music.PlaybackMode.UntilDone)
+    music.play(music.stringPlayable("E F G F G A B C5 ", 350), music.PlaybackMode.UntilDone)
+}
+
 //  Set callbacks
 input.onButtonPressed(Button.A, function on_button_pressed_a() {
     input_event(Button.A)
@@ -505,8 +514,8 @@ class Spiel {
         let done_cards = this.drawn_cards.length - this.number_of_special_cards
         if (this.mode == Modes.SINGLEPLAYER || this.mode == Modes.FAMILY) {
             //  100% done
-            if (done_cards == this.number_of_cards) {
-                // TODO special action sounds (e.g. melody)
+            if (done_cards >= this.number_of_cards) {
+                play_happy_music()
                 basic.showIcon(IconNames.Happy)
             } else if (done_cards >= this.number_of_cards / 2) {
                 //  50%
@@ -584,7 +593,7 @@ class Spiel {
             
             if (this.mode == Modes.TIMED && this.timer.time_is_up()) {
                 this.gamestate = Gamestate.GAME_OVER
-                music.play(music.stringPlayable("C G C5 G C G C5 G ", 400), music.PlaybackMode.LoopingInBackground)
+                play_timeup_music()
                 control.waitMicros(400 * 10000)
                 music.stopAllSounds()
                 this.celebration()
