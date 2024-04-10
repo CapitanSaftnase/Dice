@@ -5,7 +5,7 @@ DEFAULT_NUMBER_OF_CARDS_TIMED = 37
 DEFAULT_NUMBER_OF_CARDS_FAMILY = 9
 DEFAULT_NUMBER_OF_PLAYERS_PICKER = 4
 
-PROBABILITY_SPECIAL_CARD = 20
+PROBABILITY_SPECIAL_CARD = 30
 
 # Probabilities have to add up to 100%
 PROBABILITY_BONBON = 50
@@ -273,7 +273,7 @@ class Spiel:
             else:
                 basic.show_icon(IconNames.SAD)
 
-            # Game waits for 3 seconds before restarting
+            # Game waits for 2 seconds before restarting
             control.wait_micros(2000000)
             basic.show_number(done_cards, DISPLAY_INTERVAL)
             control.wait_micros(2000000)
@@ -355,6 +355,7 @@ class Spiel:
             # No cards left
             if len(self.cards) == 0:
                 self.gamestate = Gamestate.GAME_OVER
+                control.wait_micros(2000000)
                 self.celebration()
 
         if self.mode == Modes.PICKER:
@@ -379,14 +380,27 @@ class Spiel:
     def output_card(self, card):
         # TODO: Make cool symbols for the special cards, instead of displaying just the letter.
         if card == "Bonbon":
-            basic.show_string("B", DISPLAY_INTERVAL)
+            basic.show_leds("""
+                . . . # .
+                . # # # #
+                . # # # .
+                # # # # .
+                . # . . .
+                """)
         elif card == "Song":
-            basic.show_string("S", DISPLAY_INTERVAL)
+            basic.show_icon(IconNames.EIGHTH_NOTE)
         elif card == "Pause":
-            basic.show_string("P", DISPLAY_INTERVAL)
+            basic.show_leds("""
+                . . . . .
+                . # . # .
+                . # . # .
+                . # . # .
+                . . . . .
+                """)
         elif card == "Abgeben":
-            basic.show_string("A", DISPLAY_INTERVAL)
+            basic.show_icon(IconNames.SWORD)
         else:
+            # Make sound to make clear that a card was drawn.
             basic.show_string(card, DISPLAY_INTERVAL)
 
     # Reset game to beginning showing mode selection first
