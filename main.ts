@@ -12,6 +12,35 @@ let PROBABILITY_ABGEBEN = 10
 let PROBABILITY_PAUSE = 5
 //  Minimum display duration for any kind of output
 let DISPLAY_INTERVAL = 50
+//  Music for different events
+function play_bonbon_music() {
+    music.play(music.stringPlayable("G A G C5 C5 - - - ", 350), music.PlaybackMode.UntilDone)
+}
+
+function play_song_music() {
+    music.play(music.stringPlayable("A - G A C5 - - - ", 320), music.PlaybackMode.UntilDone)
+}
+
+function play_abgeben_music() {
+    music.play(music.stringPlayable("C - E C C C - - ", 350), music.PlaybackMode.UntilDone)
+}
+
+function play_pause_music() {
+    music.play(music.stringPlayable("B A G C5 - - - - ", 350), music.PlaybackMode.UntilDone)
+}
+
+function play_start_music() {
+    music.play(music.stringPlayable("A B C5 C5 - - - - ", 320), music.PlaybackMode.UntilDone)
+}
+
+function play_end_music() {
+    music.play(music.stringPlayable("E D C C - - - - ", 320), music.PlaybackMode.UntilDone)
+}
+
+function play_draw_card_music() {
+    music.play(music.stringPlayable("C E - - - - - - ", 450), music.PlaybackMode.UntilDone)
+}
+
 //  Set callbacks
 input.onButtonPressed(Button.A, function on_button_pressed_a() {
     input_event(Button.A)
@@ -319,6 +348,7 @@ class Spiel {
         this.drawn_cards = drawn_cards
         this.timer = new Timer()
         this.time_limit_in_seconds = TIME_LIMIT_IN_SECONDS
+        play_start_music()
         basic.showString(new Modes().items(this.index), DISPLAY_INTERVAL)
     }
     
@@ -376,7 +406,7 @@ class Spiel {
             this.index = DEFAULT_NUMBER_OF_PLAYERS_PICKER
             this.gamestate = Gamestate.CARD_SELECT
             basic.showNumber(this.index, DISPLAY_INTERVAL)
-            //  TODO: Implement 
+            //  TODO: Implement
             return
         }
         
@@ -601,8 +631,10 @@ class Spiel {
                 # # # # .
                 . # . . .
                 `)
+            play_bonbon_music()
         } else if (card == "Song") {
             basic.showIcon(IconNames.EighthNote)
+            play_song_music()
         } else if (card == "Pause") {
             basic.showLeds(`
                 . . . . .
@@ -611,11 +643,13 @@ class Spiel {
                 . # . # .
                 . . . . .
                 `)
+            play_pause_music()
         } else if (card == "Abgeben") {
             basic.showIcon(IconNames.Sword)
+            play_abgeben_music()
         } else {
-            //  Make sound to make clear that a card was drawn.
             basic.showString(card, DISPLAY_INTERVAL)
+            play_draw_card_music()
         }
         
     }
@@ -623,6 +657,7 @@ class Spiel {
     //  Reset game to beginning showing mode selection first
     public exit_game() {
         this.init_game(Modes.SINGLEPLAYER, 0, 0, Gamestate.MODE_SELECT, [], [])
+        play_end_music()
     }
     
 }

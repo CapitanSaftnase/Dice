@@ -30,6 +30,43 @@ def on_gesture_shake():
     input_event(Gesture.SHAKE)
 
 
+# Music for different events
+def play_bonbon_music():
+    music.play(
+        music.string_playable("G A G C5 C5 - - - ", 350),
+        music.PlaybackMode.UNTIL_DONE)
+
+def play_song_music():
+    music.play(
+        music.string_playable("A - G A C5 - - - ", 320),
+        music.PlaybackMode.UNTIL_DONE)
+
+def play_abgeben_music():
+    music.play(
+        music.string_playable("C - E C C C - - ", 350),
+        music.PlaybackMode.UNTIL_DONE)
+
+def play_pause_music():
+    music.play(
+        music.string_playable("B A G C5 - - - - ", 350),
+        music.PlaybackMode.UNTIL_DONE)
+
+def play_start_music():
+    music.play(
+        music.string_playable("A B C5 C5 - - - - ", 320),
+        music.PlaybackMode.UNTIL_DONE)
+
+def play_end_music():
+    music.play(
+        music.string_playable("E D C C - - - - ", 320),
+        music.PlaybackMode.UNTIL_DONE)
+
+def play_draw_card_music():
+    music.play(
+        music.string_playable("C E - - - - - - ", 450),
+        music.PlaybackMode.UNTIL_DONE)
+
+
 # Set callbacks
 input.on_button_pressed(Button.A, on_button_pressed_a)
 input.on_button_pressed(Button.B, on_button_pressed_b)
@@ -151,6 +188,7 @@ class Spiel:
         self.timer = Timer()
         self.time_limit_in_seconds = TIME_LIMIT_IN_SECONDS
 
+        play_start_music()
         basic.show_string(Modes().items(self.index), DISPLAY_INTERVAL)
 
     def select_mode(self, event):
@@ -388,8 +426,10 @@ class Spiel:
                 # # # # .
                 . # . . .
                 """)
+            play_bonbon_music()
         elif card == "Song":
             basic.show_icon(IconNames.EIGHTH_NOTE)
+            play_song_music()
         elif card == "Pause":
             basic.show_leds("""
                 . . . . .
@@ -398,15 +438,18 @@ class Spiel:
                 . # . # .
                 . . . . .
                 """)
+            play_pause_music()
         elif card == "Abgeben":
             basic.show_icon(IconNames.SWORD)
+            play_abgeben_music()
         else:
-            # Make sound to make clear that a card was drawn.
             basic.show_string(card, DISPLAY_INTERVAL)
+            play_draw_card_music()
 
     # Reset game to beginning showing mode selection first
     def exit_game(self):
         self.init_game(Modes.SINGLEPLAYER, 0, 0, Gamestate.MODE_SELECT, [], [])
+        play_end_music()
 
 
 spiel = Spiel(Modes.SINGLEPLAYER, 0, 0, Gamestate.MODE_SELECT, [], [])
