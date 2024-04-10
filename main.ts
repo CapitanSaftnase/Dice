@@ -1,5 +1,5 @@
 //  Custom config for the user
-let TIME_LIMIT_IN_SECONDS = 1200
+let TIME_LIMIT_IN_SECONDS = 5
 let DEFAULT_NUMBER_OF_CARDS_SINGLEPLAYER = 5
 let DEFAULT_NUMBER_OF_CARDS_TIMED = 37
 let DEFAULT_NUMBER_OF_CARDS_FAMILY = 9
@@ -537,6 +537,17 @@ class Spiel {
         
         if (this.mode == Modes.PICKER || this.mode == Modes.TOP_OF_THE_DECK) {
             //  TODO: Make a cool celebration.
+            if (done_cards > this.number_of_cards * 4) {
+                basic.showIcon(IconNames.Happy)
+                music.play(music.stringPlayable("E F F A A B A - ", 500), music.PlaybackMode.LoopingInBackground)
+            } else if (done_cards > this.number_of_cards * 2) {
+                basic.showIcon(IconNames.SmallHeart)
+            } else {
+                basic.showIcon(IconNames.Sad)
+            }
+            
+            control.waitMicros(2000000)
+            music.stopMelody(MelodyStopOptions.All)
             this.exit_game()
         }
         
@@ -573,6 +584,9 @@ class Spiel {
             
             if (this.mode == Modes.TIMED && this.timer.time_is_up()) {
                 this.gamestate = Gamestate.GAME_OVER
+                music.play(music.stringPlayable("C G C5 G C G C5 G ", 400), music.PlaybackMode.LoopingInBackground)
+                control.waitMicros(400 * 10000)
+                music.stopAllSounds()
                 this.celebration()
             }
             

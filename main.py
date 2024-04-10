@@ -1,5 +1,5 @@
 # Custom config for the user
-TIME_LIMIT_IN_SECONDS = 1200
+TIME_LIMIT_IN_SECONDS = 5
 DEFAULT_NUMBER_OF_CARDS_SINGLEPLAYER = 5
 DEFAULT_NUMBER_OF_CARDS_TIMED = 37
 DEFAULT_NUMBER_OF_CARDS_FAMILY = 9
@@ -335,6 +335,17 @@ class Spiel:
 
         if self.mode == Modes.PICKER or self.mode == Modes.TOP_OF_THE_DECK:
             # TODO: Make a cool celebration.
+            if done_cards > self.number_of_cards * 4:
+                basic.show_icon(IconNames.HAPPY)
+                music.play(music.string_playable("E F F A A B A - ", 500),
+                    music.PlaybackMode.LOOPING_IN_BACKGROUND)
+            elif done_cards > self.number_of_cards * 2:
+                basic.show_icon(IconNames.SMALL_HEART)
+            else:
+                basic.show_icon(IconNames.SAD)
+                
+            control.wait_micros(2000000)
+            music.stop_melody(MelodyStopOptions.ALL)
             self.exit_game()
 
     # Triggered with A + B -> change gamestate and call celebration()
@@ -366,6 +377,10 @@ class Spiel:
 
             if self.mode == Modes.TIMED and self.timer.time_is_up():
                 self.gamestate = Gamestate.GAME_OVER
+                music.play(music.string_playable("C G C5 G C G C5 G ", 400),
+                    music.PlaybackMode.LOOPING_IN_BACKGROUND)
+                control.wait_micros(400 * 10000)
+                music.stop_all_sounds()
                 self.celebration()
 
         if self.mode == Modes.FAMILY:
@@ -462,6 +477,7 @@ class Spiel:
 
 spiel = Spiel(Modes.SINGLEPLAYER, 0, 0, Gamestate.MODE_SELECT, [], [])
 play_start_music()
+
 
 # Various helper functions
 
