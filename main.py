@@ -1,10 +1,17 @@
 # Custom config for the user
 TIME_LIMIT_IN_SECONDS = 1200
-DEFAULT_NUMBER_OF_CARDS_SINGLEPLAYER = 37
+DEFAULT_NUMBER_OF_CARDS_SINGLEPLAYER = 5
 DEFAULT_NUMBER_OF_CARDS_TIMED = 37
-DEFAULT_NUMBER_OF_CARDS_FAMILY = 65
+DEFAULT_NUMBER_OF_CARDS_FAMILY = 9
 DEFAULT_NUMBER_OF_PLAYERS_PICKER = 4
 
+PROBABILITY_SPECIAL_CARD = 20
+
+# Probabilities have to add up to 100%
+PROBABILITY_BONBON = 50
+PROBABILITY_SONG = 35
+PROBABILITY_ABGEBEN = 10
+PROBABILITY_PAUSE = 5
 
 # Minimum display duration for any kind of output
 DISPLAY_INTERVAL = 50
@@ -188,12 +195,14 @@ class Spiel:
 
         if self.mode == Modes.PICKER:
             self.index = DEFAULT_NUMBER_OF_PLAYERS_PICKER
-            # TODO: Implement 
-            pass
+            self.gamestate = Gamestate.CARD_SELECT
+            basic.show_number(self.index, DISPLAY_INTERVAL)
+            # TODO: Implement
+            return
 
         if self.mode == Modes.TOP_OF_THE_DECK:
             # TODO: Implement
-            pass
+            return
 
 
     def select_number_of_cards(self, event):
@@ -201,7 +210,7 @@ class Spiel:
             self.increment_number_of_cards()
         elif event == ButtonAction.LEFT:
             self.decrement_number_of_cards()
-            
+
         basic.show_number(self.index, DISPLAY_INTERVAL)
 
     def increment_number_of_cards(self):
@@ -251,7 +260,7 @@ class Spiel:
     def celebration(self):
         done_cards = len(self.drawn_cards)
 
-        if self.mode == Modes.SINGLEPLAYER:
+        if self.mode == Modes.SINGLEPLAYER or self.mode == Modes.FAMILY:
             # 100% done
             if done_cards == self.number_of_cards:
                 #TODO special action sounds (e.g. melody)
@@ -280,11 +289,19 @@ class Spiel:
             basic.clear_screen()
             self.exit_game()
 
+        if self.mode == Modes.PICKER:
+            # TODO: Make a cool celebration.
+            self.exit_game()
 
     # Triggered with A + B -> change gamestate and call celebration()
     def user_induced_exit(self):
         gamestate = Gamestate.GAME_OVER
         self.celebration()
+
+    def special_card_drawn(self):
+        random_value = random_number(100)
+
+        return random_value < PROBABILITY_SPECIAL_CARD
 
     def draw_card(self):
         if self.mode == Modes.SINGLEPLAYER or self.mode == Modes.TIMED:
@@ -302,26 +319,73 @@ class Spiel:
             if len(self.cards) == 0:
                 self.gamestate = Gamestate.GAME_OVER
                 self.celebration()
-            
+
             if self.mode == Modes.TIMED and self.timer.time_is_up():
                 self.gamestate = Gamestate.GAME_OVER
                 self.celebration()
 
         if self.mode == Modes.FAMILY:
-            pass
+            if self.special_card_drawn():
+                self.number_of_cards += 1
+                random_value = random_number(100)
+
+                if random_value < PROBABILITY_BONBON:
+                    self.drawn_cards.push("Bonbon")
+                    self.output_card("Bonbon")
+                elif random_value < PROBABILITY_BONBON + PROBABILITY_PAUSE:
+                    self.drawn_cards.push("Pause")
+                    self.output_card("Pause")
+                elif random_value < PROBABILITY_BONBON + PROBABILITY_PAUSE + PROBABILITY_SONG:
+                    self.drawn_cards.push("Song")
+                    self.output_card("Song")
+                else:
+                    self.drawn_cards.push("Abgeben")
+                    self.output_card("Abgeben")
+            else:
+                index_for_drawing = random_number(len(self.cards))
+
+                # Remove drawn_card from cards and add it to drawn_cards
+                drawn_card = self.cards[index_for_drawing]
+                self.cards.remove_at(index_for_drawing)
+                self.drawn_cards.push(drawn_card)
+
+                self.output_card(drawn_card)
+                self.index = 0
+
+            # No cards left
+            if len(self.cards) == 0:
+                self.gamestate = Gamestate.GAME_OVER
+                self.celebration()
 
         if self.mode == Modes.PICKER:
-            pass
+            index_for_drawing = random_number(len(self.cards))
+
+            # Remove drawn_card from cards and add it to drawn_cards
+            drawn_card = self.cards[index_for_drawing]
+            self.drawn_cards.push(drawn_card)
+
+            self.output_card(drawn_card)
+            self.index = 0
+
+            # No cards left
+            if len(self.cards) == 0:
+                self.gamestate = Gamestate.GAME_OVER
+                self.celebration()
 
         if self.mode == Modes.TOP_OF_THE_DECK:
             pass
 
     # Depending on what type of symbol(int, string, char) card is, output different sounds
     def output_card(self, card):
-        if card == "P":
-            basic.show_string(card, DISPLAY_INTERVAL)
-        elif card == "S":
-            basic.show_string(card, DISPLAY_INTERVAL)
+        # TODO: Make cool symbols for the special cards, instead of displaying just the letter.
+        if card == "Bonbon":
+            basic.show_string("B", DISPLAY_INTERVAL)
+        elif card == "Song":
+            basic.show_string("S", DISPLAY_INTERVAL)
+        elif card == "Pause":
+            basic.show_string("P", DISPLAY_INTERVAL)
+        elif card == "Abgeben":
+            basic.show_string("A", DISPLAY_INTERVAL)
         else:
             basic.show_string(card, DISPLAY_INTERVAL)
 
