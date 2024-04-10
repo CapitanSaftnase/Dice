@@ -440,7 +440,13 @@ class Spiel:
                 """)
             play_pause_music()
         elif card == "Abgeben":
-            basic.show_icon(IconNames.SWORD)
+            basic.show_leds("""
+                . . . # #
+                . . # # #
+                # # # # .
+                . # # . .
+                # . # . .
+                """)
             play_abgeben_music()
         else:
             basic.show_string(card, DISPLAY_INTERVAL)
