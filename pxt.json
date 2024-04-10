@@ -8,8 +8,7 @@
     },
     "files": [
         "README.md",
-        "main.py",
-        "main.ts"
+        "main.py"
     ],
     "testFiles": [],
     "targetVersions": {
