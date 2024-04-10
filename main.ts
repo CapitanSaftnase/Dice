@@ -535,7 +535,7 @@ class Spiel {
             this.exit_game()
         }
         
-        if (this.mode == Modes.PICKER) {
+        if (this.mode == Modes.PICKER || this.mode == Modes.TOP_OF_THE_DECK) {
             //  TODO: Make a cool celebration.
             this.exit_game()
         }

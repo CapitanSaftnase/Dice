@@ -333,7 +333,7 @@ class Spiel:
             basic.clear_screen()
             self.exit_game()
 
-        if self.mode == Modes.PICKER:
+        if self.mode == Modes.PICKER or self.mode == Modes.TOP_OF_THE_DECK:
             # TODO: Make a cool celebration.
             self.exit_game()
 
