@@ -65,14 +65,21 @@ def play_draw_card_music():
     music.play(
         music.string_playable("C E - - - - - - ", 450),
         music.PlaybackMode.UNTIL_DONE)
+
 def play_timeup_music():
-    music.play(music.string_playable("C G C5 G C G C5 G ", 400), music.PlaybackMode.LOOPING_IN_BACKGROUND)
+    music.play(
+        music.string_playable("C G C5 G C G C5 G ", 400), 
+        music.PlaybackMode.LOOPING_IN_BACKGROUND)
 
 def play_happy_music():
-    music.play(music.string_playable("E F G F G A B C5 ", 350),
+    music.play(
+        music.string_playable("E F G F G A B C5 ", 350),
         music.PlaybackMode.UNTIL_DONE)
-    music.play(music.string_playable("E F G F G A B C5 ", 350),
-            music.PlaybackMode.UNTIL_DONE)
+
+    music.play(
+        music.string_playable("E F G F G A B C5 ", 350),
+        music.PlaybackMode.UNTIL_DONE)
+
 
 # Set callbacks
 input.on_button_pressed(Button.A, on_button_pressed_a)
