@@ -146,7 +146,7 @@ class Spiel:
         self.gamestate = gamestate
         self.cards = cards
         self.drawn_cards = drawn_cards
-        
+
         self.timer = Timer()
         self.time_limit_in_seconds = TIME_LIMIT_IN_SECONDS
 
@@ -197,7 +197,7 @@ class Spiel:
             self.index = DEFAULT_NUMBER_OF_PLAYERS_PICKER
             self.gamestate = Gamestate.CARD_SELECT
             basic.show_number(self.index, DISPLAY_INTERVAL)
-            # TODO: Implement 
+            # TODO: Implement
             return
 
         if self.mode == Modes.TOP_OF_THE_DECK:
@@ -210,7 +210,7 @@ class Spiel:
             self.increment_number_of_cards()
         elif event == ButtonAction.LEFT:
             self.decrement_number_of_cards()
-            
+
         basic.show_number(self.index, DISPLAY_INTERVAL)
 
     def increment_number_of_cards(self):
@@ -319,7 +319,7 @@ class Spiel:
             if len(self.cards) == 0:
                 self.gamestate = Gamestate.GAME_OVER
                 self.celebration()
-            
+
             if self.mode == Modes.TIMED and self.timer.time_is_up():
                 self.gamestate = Gamestate.GAME_OVER
                 self.celebration()
