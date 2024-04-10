@@ -133,6 +133,7 @@ class Spiel:
         self.mode = Modes.SINGLEPLAYER
         self.index = 0
         self.number_of_cards = 0
+        self.number_of_special_cards = 0
         self.gamestate = Gamestate.MODE_SELECT
         self.cards = []
         self.drawn_cards = []
@@ -258,7 +259,7 @@ class Spiel:
     # Outputs sound/image and how many cards were done
     # Depending on how many show different images e.g hear/smiley/sad smiley
     def celebration(self):
-        done_cards = len(self.drawn_cards)
+        done_cards = len(self.drawn_cards) - self.number_of_special_cards
 
         if self.mode == Modes.SINGLEPLAYER or self.mode == Modes.FAMILY:
             # 100% done
@@ -326,7 +327,7 @@ class Spiel:
 
         if self.mode == Modes.FAMILY:
             if self.special_card_drawn():
-                self.number_of_cards += 1
+                self.number_of_special_cards += 1
                 random_value = random_number(100)
 
                 if random_value < PROBABILITY_BONBON:
